@@ -49,8 +49,8 @@ export const HeroSection = () => {
             <div className="relative">
               <div className="absolute -top-5 -left-5 w-full h-full bg-blue/10 rounded-2xl dark:bg-blue/5"></div>
               <img 
-                src="/lovable-uploads/2ca3a21d-7b9c-44d6-879b-0f27aaec8b7c.png" 
-                alt="Healthcare professional" 
+                src="/lovable-uploads/02b407c1-3e5c-4d83-ba47-de13084a2151.png" 
+                alt="Healthcare professionals with medication" 
                 className="w-full max-w-md rounded-2xl shadow-lg object-cover relative z-10 animate-fade-in"
               />
               <div className="absolute -bottom-4 right-4 bg-white dark:bg-charcoal/70 shadow-lg rounded-lg p-3 animate-fade-in">
@@ -70,8 +70,8 @@ export const HeroSection = () => {
           <div className="relative max-w-sm mx-auto">
             <div className="absolute -top-3 -left-3 w-full h-full bg-blue/10 rounded-2xl dark:bg-blue/5"></div>
             <img 
-              src="/lovable-uploads/2ca3a21d-7b9c-44d6-879b-0f27aaec8b7c.png" 
-              alt="Healthcare professional" 
+              src="/lovable-uploads/02b407c1-3e5c-4d83-ba47-de13084a2151.png" 
+              alt="Healthcare professionals with medication" 
               className="w-full rounded-2xl shadow-lg object-cover relative z-10"
             />
           </div>
