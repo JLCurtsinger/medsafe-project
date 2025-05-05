@@ -5,7 +5,7 @@ import { ToolCard } from "@/components/ToolCard";
 export default function Tools() {
   const tools = [
     {
-      name: "VitaCheck.cc",
+      name: "Vitacheck.net",
       description: "A modern, user-friendly drug interaction checker with comprehensive database and easy-to-understand results.",
       features: [
         "Check interactions between multiple medications",
@@ -14,7 +14,7 @@ export default function Tools() {
         "Free basic version with premium features available"
       ],
       rating: 5,
-      url: "https://vitacheck.cc/",
+      url: "https://vitacheck.net/",
       recommended: true
     },
     {
