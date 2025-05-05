@@ -34,10 +34,10 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
           <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-grow">
