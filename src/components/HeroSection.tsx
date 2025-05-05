@@ -1,10 +1,20 @@
-
 import { Link } from "react-router-dom";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { BookOpen, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { scrollToTop } from "@/utils/scrollUtils";
 
 export const HeroSection = () => {
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const href = e.currentTarget.getAttribute('href');
+    
+    // If it's an anchor link (contains #), let the default behavior handle it
+    if (href && href.includes('#') && href !== '#') return;
+    
+    // Otherwise scroll to top
+    scrollToTop();
+  };
+
   return (
     <section className="relative bg-gradient-to-br from-white to-blue-50 dark:from-blue/10 dark:to-charcoal/70 py-20 min-h-[90vh] flex items-center">
       {/* Background decorative elements */}
@@ -29,13 +39,13 @@ export const HeroSection = () => {
               Adverse drug interactions affect millions of people each year. Join us in raising awareness about this preventable healthcare crisis.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/articles">
+              <Link to="/articles" onClick={handleLinkClick}>
                 <Button className="bg-blue hover:bg-blue/90 text-white font-medium transition-all shadow-md hover:shadow-lg px-6 py-3 rounded-lg">
                   Read Our Articles
                   <BookOpen className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <Link to="/about">
+              <Link to="/about" onClick={handleLinkClick}>
                 <Button variant="outline" className="border-blue text-blue hover:bg-blue/10 font-medium transition-all px-6 py-3 rounded-lg dark:border-white/30 dark:text-white dark:hover:bg-blue/20">
                   Learn About Us
                   <Info className="ml-2 h-4 w-4" />

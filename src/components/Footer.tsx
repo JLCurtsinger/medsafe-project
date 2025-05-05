@@ -1,16 +1,30 @@
-
 import { Link } from "react-router-dom";
 import { ExternalLink, Mail } from "lucide-react";
+import { scrollToTop } from "@/utils/scrollUtils";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+
+  // Custom link click handler for internal links
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const href = e.currentTarget.getAttribute('href');
+    
+    // Skip for external links (containing http or mailto)
+    if (href && (href.includes('http') || href.includes('mailto:'))) return;
+    
+    // Skip for anchor links
+    if (href && href.includes('#') && href !== '#') return;
+    
+    // Otherwise scroll to top
+    scrollToTop();
+  };
 
   return (
     <footer className="bg-white dark:bg-charcoal border-t border-gray-200 dark:border-gray-800">
       <div className="container-custom py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
-            <Link to="/" className="flex items-center space-x-2 mb-4">
+            <Link to="/" className="flex items-center space-x-2 mb-4" onClick={handleLinkClick}>
               <div className="bg-red rounded-md w-8 h-8 flex items-center justify-center text-white font-bold text-lg">
                 M
               </div>
@@ -32,22 +46,22 @@ export function Footer() {
             <h3 className="font-serif font-semibold text-lg mb-4 text-charcoal dark:text-white">Site Map</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-gray-600 dark:text-gray-400 hover:text-red dark:hover:text-red transition-colors">
+                <Link to="/" className="text-gray-600 dark:text-gray-400 hover:text-red dark:hover:text-red transition-colors" onClick={handleLinkClick}>
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/articles" className="text-gray-600 dark:text-gray-400 hover:text-red dark:hover:text-red transition-colors">
+                <Link to="/articles" className="text-gray-600 dark:text-gray-400 hover:text-red dark:hover:text-red transition-colors" onClick={handleLinkClick}>
                   Articles
                 </Link>
               </li>
               <li>
-                <Link to="/tools" className="text-gray-600 dark:text-gray-400 hover:text-red dark:hover:text-red transition-colors">
+                <Link to="/tools" className="text-gray-600 dark:text-gray-400 hover:text-red dark:hover:text-red transition-colors" onClick={handleLinkClick}>
                   Tools
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-600 dark:text-gray-400 hover:text-red dark:hover:text-red transition-colors">
+                <Link to="/about" className="text-gray-600 dark:text-gray-400 hover:text-red dark:hover:text-red transition-colors" onClick={handleLinkClick}>
                   About
                 </Link>
               </li>
