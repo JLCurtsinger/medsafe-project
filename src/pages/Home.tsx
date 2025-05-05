@@ -12,7 +12,9 @@ export default function Home() {
       <section 
         className="parallax min-h-[90vh] flex items-center justify-center text-white relative" 
         style={{ 
-          backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1631549916768-4119b4220292?q=80&w=2069')",
+          backgroundImage: "linear-gradient(to right, rgba(30, 111, 121, 0.85), rgba(233, 79, 55, 0.85)), url('https://images.unsplash.com/photo-1631549916768-4119b4220292?q=80&w=2069')",
+          backgroundPosition: "center",
+          backgroundSize: "cover"
         }}
       >
         <div className="container-custom text-center relative z-10 px-4 sm:px-6">

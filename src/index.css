@@ -75,7 +75,7 @@
   }
 
   body {
-    @apply bg-offwhite text-foreground font-sans;
+    @apply bg-background text-foreground font-sans;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -97,15 +97,15 @@
   }
 
   .btn-primary {
-    @apply bg-blue text-white hover:bg-blue/90 px-6 py-3 rounded-md transition-colors duration-300 font-semibold;
+    @apply bg-blue text-white hover:bg-blue/90 px-6 py-3 rounded-md transition-colors duration-300 font-semibold dark:bg-blue dark:text-white dark:hover:bg-blue/80;
   }
 
   .btn-secondary {
-    @apply bg-white text-blue border border-blue hover:bg-blue/10 px-6 py-3 rounded-md transition-colors duration-300 font-semibold;
+    @apply bg-white text-blue border border-blue hover:bg-blue/10 px-6 py-3 rounded-md transition-colors duration-300 font-semibold dark:bg-charcoal/70 dark:text-white dark:border-white/30 dark:hover:bg-charcoal;
   }
 
   .tag {
-    @apply inline-flex items-center text-xs font-medium px-3 py-1 rounded-full bg-blue/10 text-blue;
+    @apply inline-flex items-center text-xs font-medium px-3 py-1 rounded-full bg-blue/10 text-blue dark:bg-blue/20 dark:text-blue-200;
   }
   
   .scroll-reveal {
@@ -117,6 +117,6 @@
   }
 
   .article-card {
-    @apply bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300;
+    @apply bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 dark:bg-charcoal/30 dark:border dark:border-white/10;
   }
 }

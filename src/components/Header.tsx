@@ -17,6 +17,14 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -54,7 +62,7 @@ export function Header() {
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onClick={toggleMobileMenu}
             aria-label="Menu"
           >
             {isMobileMenuOpen ? (
@@ -69,32 +77,41 @@ export function Header() {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden fixed inset-0 bg-white dark:bg-charcoal z-40 pt-20">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="absolute top-4 right-4" 
+            onClick={closeMobileMenu}
+            aria-label="Close Menu"
+          >
+            <X className="h-6 w-6 text-charcoal dark:text-white" />
+          </Button>
           <nav className="flex flex-col items-center space-y-6 p-8">
             <Link
               to="/"
               className="text-xl font-medium text-charcoal dark:text-white"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
             >
               Home
             </Link>
             <Link
               to="/articles"
               className="text-xl font-medium text-charcoal dark:text-white"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
             >
               Articles
             </Link>
             <Link
               to="/tools"
               className="text-xl font-medium text-charcoal dark:text-white"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
             >
               Tools
             </Link>
             <Link
               to="/about"
               className="text-xl font-medium text-charcoal dark:text-white"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
             >
               About
             </Link>
