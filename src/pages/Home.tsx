@@ -1,52 +1,15 @@
-
-import { Link } from "react-router-dom";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { TestimonialSlider } from "@/components/TestimonialSlider";
-import { ExternalLink, ChevronRight, Share2, BookOpen, Info } from "lucide-react";
+import { ExternalLink, ChevronRight, Share2, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { HeroSection } from "@/components/HeroSection";
 
 export default function Home() {
   return (
     <div className="pt-16">
       {/* Hero Section */}
-      <section 
-        className="parallax min-h-[90vh] flex items-center justify-center text-white relative" 
-        style={{ 
-          backgroundImage: "linear-gradient(to right, rgba(30, 111, 121, 0.85), rgba(233, 79, 55, 0.85)), url('https://images.unsplash.com/photo-1631549916768-4119b4220292?q=80&w=2069')",
-          backgroundPosition: "center",
-          backgroundSize: "cover"
-        }}
-      >
-        <div className="container-custom text-center relative z-10 px-4 sm:px-6">
-          <ScrollReveal>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-              Medication Safety Matters
-            </h1>
-            <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8 text-gray-200">
-              Adverse drug interactions affect millions of people each year. Join us in raising awareness about this preventable healthcare crisis.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link to="/articles">
-                <Button className="btn-primary">
-                  Read Our Articles
-                  <BookOpen className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link to="/about">
-                <Button className="btn-secondary bg-white/10 text-white border-white/20 hover:bg-white/20">
-                  Learn About Us
-                  <Info className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          </ScrollReveal>
-        </div>
-        <div className="absolute bottom-10 left-0 right-0 text-center">
-          <div className="animate-bounce">
-            <ChevronRight className="h-8 w-8 rotate-90 text-white/70 mx-auto" />
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* The Problem Section */}
       <section className="py-20 bg-white dark:bg-charcoal">
