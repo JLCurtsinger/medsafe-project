@@ -5,7 +5,7 @@ import { ToolCard } from "@/components/ToolCard";
 export default function Tools() {
   const tools = [
     {
-      name: "VitaCheck",
+      name: "VitaCheck.cc",
       description: "A modern, user-friendly drug interaction checker with comprehensive database and easy-to-understand results.",
       features: [
         "Check interactions between multiple medications",
@@ -14,7 +14,7 @@ export default function Tools() {
         "Free basic version with premium features available"
       ],
       rating: 5,
-      url: "#",
+      url: "https://vitacheck.cc/",
       recommended: true
     },
     {
@@ -26,7 +26,7 @@ export default function Tools() {
         "Printable results",
         "Free to use"
       ],
-      rating: 4,
+      rating: 3,
       url: "https://www.drugs.com/drug_interactions.html"
     },
     {
@@ -38,7 +38,7 @@ export default function Tools() {
         "Covers common supplements and herbs",
         "Free to use"
       ],
-      rating: 4,
+      rating: 3,
       url: "https://www.webmd.com/interaction-checker/default.htm"
     },
     {
@@ -50,7 +50,7 @@ export default function Tools() {
         "Regular database updates",
         "Free with registration"
       ],
-      rating: 4,
+      rating: 3,
       url: "https://reference.medscape.com/drug-interactionchecker"
     },
     {
