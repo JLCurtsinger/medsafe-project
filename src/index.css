@@ -105,7 +105,7 @@
   }
 
   .tag {
-    @apply inline-flex items-center text-xs font-medium px-3 py-1 rounded-full bg-blue/10 text-blue dark:bg-blue/20 dark:text-blue-200;
+    @apply inline-flex items-center text-xs font-medium px-3 py-1 rounded-full bg-blue/10 text-blue dark:bg-blue/20 dark:text-white;
   }
   
   .scroll-reveal {
