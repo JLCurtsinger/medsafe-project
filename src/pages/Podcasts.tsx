@@ -68,6 +68,22 @@ export default function Podcasts() {
               />
             </div>
           </ScrollReveal>
+
+          <ScrollReveal>
+            <div className="max-w-4xl mx-auto mb-16">
+              <iframe 
+                style={{ borderRadius: "12px" }} 
+                src="https://open.spotify.com/embed/episode/3pnnOSmCJ2drxZQ38c5So1?utm_source=generator&theme=0&t=0" 
+                width="100%" 
+                height="352" 
+                frameBorder="0" 
+                allowFullScreen 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                loading="lazy"
+                title="The MedSafe Podcast Episode Three"
+              />
+            </div>
+          </ScrollReveal>
           
           <ScrollReveal>
             <div className="max-w-4xl mx-auto text-center">
