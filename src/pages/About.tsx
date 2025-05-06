@@ -1,6 +1,9 @@
 
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { TeamMember } from "@/components/TeamMember";
+import { Button } from "@/components/ui/button";
+import { Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function About() {
   const team = [
@@ -20,7 +23,8 @@ export default function About() {
       name: "Dr. Aisha Johnson",
       role: "Research Lead",
       bio: "Specializes in pharmacoepidemiology with a focus on adverse drug event reporting systems and prevention strategies.",
-      image: "https://images.unsplash.com/photo-1629111480404-1350c6df89b8?q=80&w=3000&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=3000&auto=format&fit=crop", 
+      // Updated to a working image of a woman in professional setting
     },
     {
       name: "Thomas Patel",
@@ -127,9 +131,12 @@ export default function About() {
             <p className="text-gray-700 dark:text-gray-300 mb-6">
               We welcome collaboration with healthcare professionals, patient advocates, researchers, and anyone passionate about medication safety. If you're interested in supporting our mission or contributing to our resources, please get in touch.
             </p>
-            <div className="inline-block bg-blue text-white px-6 py-3 rounded-md">
-              Contact: info@medsafeproject.org
-            </div>
+            <a href="mailto:admin@medsafeproject.org" className="inline-block">
+              <Button className="bg-blue text-white px-6 py-3 rounded-md">
+                <Mail className="mr-2" />
+                Contact: admin@medsafeproject.org
+              </Button>
+            </a>
           </div>
         </ScrollReveal>
       </div>
