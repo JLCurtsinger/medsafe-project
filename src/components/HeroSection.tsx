@@ -46,7 +46,7 @@ export const HeroSection = () => {
                   <AlertTriangle className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <Link to="/about" onClick={handleLinkClick}>
+              <Link to="/tools" onClick={handleLinkClick}>
                 <Button variant="outline" className="border-blue text-blue hover:bg-blue/10 font-medium transition-all px-6 py-3 rounded-lg dark:border-white/30 dark:text-white dark:hover:bg-blue/20">
                   How Safe Are Your Meds? Find Out
                   <ShieldCheck className="ml-2 h-4 w-4" />
