@@ -54,6 +54,20 @@ export default function Podcasts() {
           </ScrollReveal>
           
           <ScrollReveal>
+            <div className="max-w-4xl mx-auto mb-16">
+              <iframe 
+                style={{borderRadius: "12px"}} 
+                src="https://creators.spotify.com/pod/show/justin-curtsinger/embed/episodes/We-Thought-It-Was-Safe-The-Hidden-Risks-of-Everyday-Medications-e32ftks/a-abu5lve" 
+                width="100%" 
+                height="102px" 
+                frameBorder="0" 
+                scrolling="no"
+                title="We Thought It Was Safe: The Hidden Risks of Everyday Medications"
+              />
+            </div>
+          </ScrollReveal>
+          
+          <ScrollReveal>
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-2xl md:text-3xl font-serif font-semibold mb-4 text-charcoal dark:text-white">
                 Stay Tuned for More Episodes
