@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 /**
  * Utility function to scroll to the top of the page
  * @param closeMenu Optional callback to close mobile menu if open
