@@ -4,8 +4,11 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { BookOpen, Info, AlertTriangle, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { scrollToTop } from "@/utils/scrollUtils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const HeroSection = () => {
+  const isMobile = useIsMobile();
+  
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const href = e.currentTarget.getAttribute('href');
     
@@ -33,8 +36,19 @@ export const HeroSection = () => {
               Substance Interaction Awareness
             </span>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-charcoal dark:text-white leading-tight animate-hero-fade-in">
-              One Mistake. One Pill. 
-              <span className="text-blue dark:text-blue-100"> One Life Changed Forever.</span>
+              {isMobile ? (
+                <>
+                  <span className="block">One Mistake.</span>
+                  <span className="block">One Pill.</span>
+                  <span className="block">One Life</span>
+                  <span className="text-blue dark:text-blue-100">Changed Forever.</span>
+                </>
+              ) : (
+                <>
+                  One Mistake. One Pill. 
+                  <span className="text-blue dark:text-blue-100"> One Life Changed Forever.</span>
+                </>
+              )}
             </h1>
             <p className="text-lg md:text-xl max-w-xl mb-8 text-gray-600 dark:text-gray-300 leading-relaxed">
               Millions are <span className="font-bold text-blue">harmed</span> each year by <span className="font-bold text-blue">preventable</span> drug interactions. <span className="font-bold text-blue">Don't be next.</span>
