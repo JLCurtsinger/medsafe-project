@@ -1,0 +1,3 @@
+
+# Netlify redirect rule for single page applications
+/*    /index.html   200
