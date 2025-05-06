@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
@@ -20,7 +20,7 @@ import { NotFound } from "./pages/NotFound";
 const queryClient = new QueryClient();
 const GA_MEASUREMENT_ID = "G-XXXXXXXXXX"; // Replace with actual GA ID when available
 
-const App = () => {
+const App: React.FC = () => {
   useEffect(() => {
     // Add Google AdSense script (commented out until needed)
     // const script = document.createElement("script");
