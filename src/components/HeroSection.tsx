@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { BookOpen, Info, AlertTriangle, ShieldCheck } from "lucide-react";
@@ -38,10 +37,10 @@ export const HeroSection = () => {
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-charcoal dark:text-white leading-tight animate-hero-fade-in">
               {isMobile ? (
                 <>
-                  <span className="block">One Mistake.</span>
-                  <span className="block">One Pill.</span>
-                  <span className="block">One Life</span>
-                  <span className="text-blue dark:text-blue-100">Changed Forever.</span>
+                  <div>One Mistake.</div>
+                  <div>One Pill.</div>
+                  <div>One Life</div>
+                  <div className="text-blue dark:text-blue-100">Changed Forever.</div>
                 </>
               ) : (
                 <>
