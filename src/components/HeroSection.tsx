@@ -1,6 +1,7 @@
+
 import { Link } from "react-router-dom";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { BookOpen, Info } from "lucide-react";
+import { BookOpen, Info, AlertTriangle, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { scrollToTop } from "@/utils/scrollUtils";
 
@@ -31,24 +32,24 @@ export const HeroSection = () => {
             <span className="inline-block px-4 py-2 rounded-full bg-blue/10 text-blue font-medium text-sm mb-4 dark:bg-blue/20 dark:text-white">
               Medication Safety Initiative
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-charcoal dark:text-white leading-tight animate-fade-in">
-              Medication Safety 
-              <span className="text-blue dark:text-blue-100"> Matters</span>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-charcoal dark:text-white leading-tight animate-fade-in">
+              One Mistake. One Pill. 
+              <span className="text-blue dark:text-blue-100"> One Life Changed Forever.</span>
             </h1>
             <p className="text-lg md:text-xl max-w-xl mb-8 text-gray-600 dark:text-gray-300 leading-relaxed">
-              Adverse drug interactions affect millions of people each year. Join us in raising awareness about this preventable healthcare crisis.
+              Millions are <span className="font-bold text-blue">harmed</span> each year by <span className="font-bold text-blue">preventable</span> drug interactions. <span className="font-bold text-blue">Don't be next.</span>
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link to="/articles" onClick={handleLinkClick}>
                 <Button className="bg-blue hover:bg-blue/90 text-white font-medium transition-all shadow-md hover:shadow-lg px-6 py-3 rounded-lg">
-                  Read Our Articles
-                  <BookOpen className="ml-2 h-4 w-4" />
+                  See the Top 10 Dangerous Drug Combos
+                  <AlertTriangle className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link to="/about" onClick={handleLinkClick}>
                 <Button variant="outline" className="border-blue text-blue hover:bg-blue/10 font-medium transition-all px-6 py-3 rounded-lg dark:border-white/30 dark:text-white dark:hover:bg-blue/20">
-                  Learn About Us
-                  <Info className="ml-2 h-4 w-4" />
+                  How Safe Are Your Meds? Find Out
+                  <ShieldCheck className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
