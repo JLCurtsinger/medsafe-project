@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { GoogleAnalytics } from "./components/GoogleAnalytics";
+import { BackToTopButton } from "./components/BackToTopButton";
 import Home from "./pages/Home";
 import Articles from "./pages/Articles";
 import ArticleDetail from "./pages/ArticleDetail";
@@ -51,6 +52,7 @@ const App = () => {
               </Routes>
             </main>
             <Footer />
+            <BackToTopButton />
           </div>
         </BrowserRouter>
       </TooltipProvider>

@@ -16,3 +16,35 @@ export const scrollToTop = (closeMenu?: () => void) => {
   // Execute callback if provided (e.g., to close mobile menu)
   if (closeMenu) closeMenu();
 };
+
+/**
+ * Utility hook for creating a "Back to Top" button
+ * @returns Object containing showButton state
+ */
+export const useScrollToTop = () => {
+  const [showButton, setShowButton] = React.useState(false);
+  
+  React.useEffect(() => {
+    const handleScroll = () => {
+      // Show button when scrolled down 300px
+      if (window.scrollY > 300) {
+        setShowButton(true);
+      } else {
+        setShowButton(false);
+      }
+    };
+    
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll);
+    
+    // Initial check
+    handleScroll();
+    
+    // Clean up event listener
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+  
+  return { showButton };
+};
