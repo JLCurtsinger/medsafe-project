@@ -2,10 +2,11 @@
 import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { CalendarIcon, Clock, Share2, ChevronLeft } from "lucide-react";
+import { CalendarIcon, Clock, Share2, ChevronLeft, Facebook, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { articles } from "@/data/articles";
 import { NotFound } from "./NotFound";
+import { shareContent } from "@/utils/shareUtils";
 
 export default function ArticleDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -23,6 +24,9 @@ export default function ArticleDetail() {
   const relatedArticles = articles
     .filter((a) => a.category === article.category && a.id !== article.id)
     .slice(0, 3);
+
+  // Current article URL for sharing
+  const articleUrl = `${window.location.origin}/article/${article.slug}`;
 
   return (
     <div className="pt-24 pb-20 min-h-screen">
@@ -64,13 +68,11 @@ export default function ArticleDetail() {
           
           <ScrollReveal>
             <div className="prose prose-lg dark:prose-invert max-w-none mb-12">
-              <p>
-                {article.fullText.split('\n\n').map((paragraph, idx) => (
-                  <p key={idx} className="mb-6 text-gray-800 dark:text-gray-200">
-                    {paragraph}
-                  </p>
-                ))}
-              </p>
+              {article.fullText.split('\n\n').map((paragraph, idx) => (
+                <p key={idx} className="mb-6 text-gray-800 dark:text-gray-200">
+                  {paragraph}
+                </p>
+              ))}
               
               {article.pullQuote && (
                 <blockquote className="border-l-4 border-blue pl-6 my-8 italic text-xl font-serif text-charcoal dark:text-white">
@@ -81,10 +83,33 @@ export default function ArticleDetail() {
               <div className="flex items-center justify-between mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
                 <div>
                   <h4 className="font-semibold text-lg mb-1">Share this article</h4>
-                  <Button variant="outline" size="sm" className="mr-2">
-                    <Share2 className="h-4 w-4 mr-2" />
-                    Share
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => shareContent("facebook", articleUrl, article.title)}
+                    >
+                      <Facebook className="h-4 w-4 mr-2" />
+                      Share
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => shareContent("twitter", articleUrl, article.title)}
+                    >
+                      <Twitter className="h-4 w-4 mr-2" />
+                      Tweet
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => shareContent("email", articleUrl, `Check out this article: ${article.title}`, 
+                        `I thought you might be interested in this article from MedSafe Project:\n\n${article.title}\n${articleUrl}`)}
+                    >
+                      <Share2 className="h-4 w-4 mr-2" />
+                      Email
+                    </Button>
+                  </div>
                 </div>
                 
                 <Link to="/articles">
