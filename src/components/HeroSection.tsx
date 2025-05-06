@@ -30,7 +30,7 @@ export const HeroSection = () => {
           {/* Left content - Text and CTA */}
           <ScrollReveal className="text-left">
             <span className="inline-block px-4 py-2 rounded-full bg-blue/10 text-blue font-medium text-sm mb-4 dark:bg-blue/20 dark:text-white">
-              Medication Safety Initiative
+              Substance Interaction Awareness
             </span>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-charcoal dark:text-white leading-tight animate-fade-in">
               One Mistake. One Pill. 
