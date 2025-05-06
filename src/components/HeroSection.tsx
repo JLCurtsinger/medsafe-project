@@ -51,7 +51,7 @@ export const HeroSection = () => {
               )}
             </h1>
             <p className="text-lg md:text-xl max-w-xl mb-8 text-gray-600 dark:text-gray-300 leading-relaxed">
-              Millions are <span className="font-bold text-blue">harmed</span> each year by <span className="font-bold text-blue">preventable</span> drug interactions. <span className="font-bold text-blue">Don't be next.</span>
+              Millions are <span className="font-bold text-blue">harmed</span> each year by <span className="font-bold text-blue">preventable</span> drug interactions. <span className="font-bold text-blue">It's time for answers.</span>
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link to="/articles" onClick={handleLinkClick}>
