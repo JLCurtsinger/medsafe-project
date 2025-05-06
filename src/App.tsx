@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
+import { HelmetProvider } from "react-helmet-async";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { GoogleAnalytics } from "./components/GoogleAnalytics";
@@ -35,26 +36,28 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/articles" element={<Articles />} />
-                <Route path="/article/:slug" element={<ArticleDetail />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/tools" element={<Tools />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </main>
-            <Footer />
-            <BackToTopButton />
-          </div>
-        </BrowserRouter>
+        <HelmetProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/articles" element={<Articles />} />
+                  <Route path="/article/:slug" element={<ArticleDetail />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/tools" element={<Tools />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+              <Footer />
+              <BackToTopButton />
+            </div>
+          </BrowserRouter>
+        </HelmetProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

@@ -1,6 +1,6 @@
-
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ToolCard } from "@/components/ToolCard";
+import { SEO } from "@/components/SEO";
 
 export default function Tools() {
   const tools = [
@@ -78,69 +78,135 @@ export default function Tools() {
       url: "https://www.mytherapyapp.com/"
     }
   ];
+  
+  // Create schema for tools page
+  const toolsSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": tools.map((tool, index) => ({
+      "@type": "SoftwareApplication",
+      "position": index + 1,
+      "name": tool.name,
+      "description": tool.description,
+      "applicationCategory": "HealthApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": tool.rating,
+        "ratingCount": 1,
+        "bestRating": 5,
+        "worstRating": 1
+      }
+    }))
+  };
+  
+  // Schema for FAQ section
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why should I use medication interaction tools?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Drug interaction checkers can help identify potential problems between prescription medications, over-the-counter drugs, supplements, and even food. While these tools do not replace professional medical advice, they can serve as an important first step in identifying possible risks."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can these tools replace medical advice?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. These tools should complement, not replace, advice from healthcare professionals."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are these interaction checkers completely comprehensive?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No interaction checker is 100% comprehensive. Some may miss rare or newly discovered interactions."
+        }
+      }
+    ]
+  };
 
   return (
-    <div className="pt-24 pb-20 min-h-screen">
-      <div className="container-custom">
-        <ScrollReveal>
-          <div className="max-w-4xl mx-auto text-center mb-16">
-            <h1 className="text-3xl md:text-4xl font-serif font-semibold mb-4 text-charcoal dark:text-white">
-              Recommended Tools
-            </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
-              These online resources can help you check for potential drug interactions and manage your medications safely.
-            </p>
-          </div>
-        </ScrollReveal>
+    <>
+      <SEO 
+        title="Medication Interaction Tools & Resources | MedSafe Project"
+        description="Compare and find the best drug interaction checkers and medication safety tools to help prevent adverse drug reactions and medication errors."
+        keywords={["drug interaction checkers", "medication tools", "pill identifier", "medication reminder", "medication safety apps"]}
+        schemaData={[toolsSchema, faqSchema]}
+      />
+      
+      <div className="pt-24 pb-20 min-h-screen">
+        <div className="container-custom">
+          <ScrollReveal>
+            <div className="max-w-4xl mx-auto text-center mb-16">
+              <h1 className="text-3xl md:text-4xl font-serif font-semibold mb-4 text-charcoal dark:text-white">
+                Recommended Tools
+              </h1>
+              <p className="text-lg text-gray-600 dark:text-gray-400">
+                These online resources can help you check for potential drug interactions and manage your medications safely.
+              </p>
+            </div>
+          </ScrollReveal>
 
-        <ScrollReveal>
-          <div className="bg-blue/5 dark:bg-blue/10 rounded-lg p-8 mb-16">
-            <h2 className="text-xl font-serif font-semibold mb-4 text-charcoal dark:text-white">
-              Why Use Medication Interaction Tools?
-            </h2>
-            <p className="text-gray-700 dark:text-gray-300 mb-4">
-              Drug interaction checkers can help identify potential problems between prescription medications, over-the-counter drugs, supplements, and even food. While these tools do not replace professional medical advice, they can serve as an important first step in identifying possible risks.
-            </p>
-            <p className="text-gray-700 dark:text-gray-300">
-              We recommend using these tools before starting new medications and discussing any concerns with your healthcare provider.
-            </p>
-          </div>
-        </ScrollReveal>
+          <ScrollReveal>
+            <div className="bg-blue/5 dark:bg-blue/10 rounded-lg p-8 mb-16">
+              <h2 className="text-xl font-serif font-semibold mb-4 text-charcoal dark:text-white">
+                Why Use Medication Interaction Tools?
+              </h2>
+              <p className="text-gray-700 dark:text-gray-300 mb-4">
+                Drug interaction checkers can help identify potential problems between prescription medications, over-the-counter drugs, supplements, and even food. While these tools do not replace professional medical advice, they can serve as an important first step in identifying possible risks.
+              </p>
+              <p className="text-gray-700 dark:text-gray-300">
+                We recommend using these tools before starting new medications and discussing any concerns with your healthcare provider.
+              </p>
+            </div>
+          </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {tools.map((tool, index) => (
-            <ScrollReveal key={tool.name} delay={index * 100}>
-              <ToolCard {...tool} />
-            </ScrollReveal>
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {tools.map((tool, index) => (
+              <ScrollReveal key={tool.name} delay={index * 100}>
+                <ToolCard {...tool} />
+              </ScrollReveal>
+            ))}
+          </div>
+
+          <ScrollReveal>
+            <div className="max-w-4xl mx-auto bg-white dark:bg-charcoal/20 rounded-lg p-8 shadow-md">
+              <h2 className="text-xl font-serif font-semibold mb-4 text-charcoal dark:text-white">
+                Important Note About These Tools
+              </h2>
+              <ul className="space-y-4 text-gray-700 dark:text-gray-300">
+                <li className="flex items-start">
+                  <span className="text-red font-bold mr-2">•</span>
+                  <p><strong>Not a substitute for medical advice:</strong> These tools should complement, not replace, advice from healthcare professionals.</p>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red font-bold mr-2">•</span>
+                  <p><strong>Database limitations:</strong> No interaction checker is 100% comprehensive. Some may miss rare or newly discovered interactions.</p>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red font-bold mr-2">•</span>
+                  <p><strong>Personal factors matter:</strong> Individual factors like age, weight, kidney function, and genetics can affect how medications interact in your body.</p>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red font-bold mr-2">•</span>
+                  <p><strong>Discuss with providers:</strong> Always inform all your healthcare providers about all medications and supplements you take.</p>
+                </li>
+              </ul>
+            </div>
+          </ScrollReveal>
         </div>
-
-        <ScrollReveal>
-          <div className="max-w-4xl mx-auto bg-white dark:bg-charcoal/20 rounded-lg p-8 shadow-md">
-            <h2 className="text-xl font-serif font-semibold mb-4 text-charcoal dark:text-white">
-              Important Note About These Tools
-            </h2>
-            <ul className="space-y-4 text-gray-700 dark:text-gray-300">
-              <li className="flex items-start">
-                <span className="text-red font-bold mr-2">•</span>
-                <p><strong>Not a substitute for medical advice:</strong> These tools should complement, not replace, advice from healthcare professionals.</p>
-              </li>
-              <li className="flex items-start">
-                <span className="text-red font-bold mr-2">•</span>
-                <p><strong>Database limitations:</strong> No interaction checker is 100% comprehensive. Some may miss rare or newly discovered interactions.</p>
-              </li>
-              <li className="flex items-start">
-                <span className="text-red font-bold mr-2">•</span>
-                <p><strong>Personal factors matter:</strong> Individual factors like age, weight, kidney function, and genetics can affect how medications interact in your body.</p>
-              </li>
-              <li className="flex items-start">
-                <span className="text-red font-bold mr-2">•</span>
-                <p><strong>Discuss with providers:</strong> Always inform all your healthcare providers about all medications and supplements you take.</p>
-              </li>
-            </ul>
-          </div>
-        </ScrollReveal>
       </div>
-    </div>
+    </>
   );
 }
