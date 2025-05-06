@@ -13,6 +13,7 @@ import { BackToTopButton } from "./components/BackToTopButton";
 import Home from "./pages/Home";
 import Articles from "./pages/Articles";
 import ArticleDetail from "./pages/ArticleDetail";
+import Podcasts from "./pages/Podcasts";
 import About from "./pages/About";
 import Tools from "./pages/Tools";
 import { NotFound } from "./pages/NotFound";
@@ -48,6 +49,7 @@ const App: React.FC = () => {
                   <Route path="/" element={<Home />} />
                   <Route path="/articles" element={<Articles />} />
                   <Route path="/article/:slug" element={<ArticleDetail />} />
+                  <Route path="/podcasts" element={<Podcasts />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/tools" element={<Tools />} />
                   <Route path="*" element={<NotFound />} />

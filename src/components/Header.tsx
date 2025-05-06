@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
@@ -79,6 +80,13 @@ export function Header() {
             Articles
           </Link>
           <Link 
+            to="/podcasts" 
+            className={`font-medium ${isScrolled ? "text-charcoal/80 dark:text-white/80" : "text-charcoal/80 dark:text-white/80"} hover:text-red transition-colors`}
+            onClick={handleLinkClick}
+          >
+            Podcasts
+          </Link>
+          <Link 
             to="/tools" 
             className={`font-medium ${isScrolled ? "text-charcoal/80 dark:text-white/80" : "text-charcoal/80 dark:text-white/80"} hover:text-red transition-colors`}
             onClick={handleLinkClick}
@@ -139,6 +147,13 @@ export function Header() {
               onClick={handleLinkClick}
             >
               Articles
+            </Link>
+            <Link
+              to="/podcasts"
+              className="text-xl font-medium text-charcoal dark:text-white"
+              onClick={handleLinkClick}
+            >
+              Podcasts
             </Link>
             <Link
               to="/tools"
