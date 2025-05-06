@@ -57,7 +57,7 @@ export default function Podcasts() {
             <div className="max-w-4xl mx-auto mb-16">
               <iframe 
                 style={{borderRadius: "12px"}} 
-                src="https://open.spotify.com/embed/episode/5dmqOpgjaGfDpu2im2G1v4?utm_source=generator&t=0" 
+                src="https://open.spotify.com/embed/episode/5dmqOpgjaGfDpu2im2G1v4?utm_source=generator&theme=0&t=0" 
                 width="100%" 
                 height="352" 
                 frameBorder="0" 
