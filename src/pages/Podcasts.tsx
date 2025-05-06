@@ -48,7 +48,7 @@ export default function Podcasts() {
                 allowFullScreen 
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
                 loading="lazy"
-                title="The MedSafe Podcast Episode"
+                title="The MedSafe Podcast Episode One"
               />
             </div>
           </ScrollReveal>
@@ -64,21 +64,7 @@ export default function Podcasts() {
                 allowFullScreen 
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
                 loading="lazy"
-                title="The MedSafe Podcast Second Episode"
-              />
-            </div>
-          </ScrollReveal>
-          
-          <ScrollReveal>
-            <div className="max-w-4xl mx-auto mb-16">
-              <iframe 
-                style={{borderRadius: "12px"}} 
-                src="https://creators.spotify.com/pod/show/justin-curtsinger/embed/episodes/We-Thought-It-Was-Safe-The-Hidden-Risks-of-Everyday-Medications-e32ftks/a-abu5lve" 
-                width="100%" 
-                height="102px" 
-                frameBorder="0" 
-                scrolling="no"
-                title="We Thought It Was Safe: The Hidden Risks of Everyday Medications"
+                title="The MedSafe Podcast Episode Two"
               />
             </div>
           </ScrollReveal>
