@@ -97,7 +97,7 @@ export const HeroSection = () => {
             <img 
               src={isMobile ? "/lovable-uploads/8a40a1dd-9e4e-49b6-a9ab-5f4088d64ade.png" : "/lovable-uploads/15fc01fb-7936-49ac-a0ee-ddea34c0d484.png"} 
               alt={isMobile ? "Close-up of hands holding green capsules." : "Close-up of hands holding colorful pills and capsules"}
-              className="w-full rounded-2xl shadow-lg object-cover relative z-10 max-h-[300px] sm:max-h-[400px]"
+              className="w-full rounded-2xl shadow-lg object-cover relative z-10 max-h-[300px] sm:max-h-[400px] md:max-h-[250px] lg:max-h-none"
             />
           </div>
         </ScrollReveal>
