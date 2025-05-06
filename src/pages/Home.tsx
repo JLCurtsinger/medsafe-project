@@ -24,13 +24,23 @@ export default function Home() {
       <SEO title="MedSafe Project - Prevent Adverse Drug Interactions with Smarter Tools" description="Learn how to prevent harmful medication interactions and adverse drug events with reliable tools and education from the MedSafe Project." keywords={["medication safety", "drug interactions", "adverse drug events", "medication tools", "patient safety", "healthcare safety"]} schemaData={homeSchema} />
       
       <div className="pt-16">
-        {/* ... keep existing code (Home page content) */}
+        
         {/* Hero Section */}
         <HeroSection />
 
-        {/* The Problem Section */}
-        <section className="py-20 bg-white dark:bg-charcoal">
-          <div className="container-custom">
+        {/* The Problem Section - Added subtle visual enhancement */}
+        <section className="py-20 bg-white dark:bg-charcoal relative">
+          {/* Added subtle visual element for the Problem section */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {/* Subtle pattern overlay */}
+            <div className="absolute inset-0 bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAEklEQVQImWNgYGD4z0AswK4SAFXuAf8EPy+xAAAAAElFTkSuQmCC')] opacity-[0.03] dark:opacity-[0.05]"></div>
+            {/* Blurred pill silhouette in the bottom-right corner */}
+            <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-blue/3 dark:bg-blue/5 blur-3xl transform translate-x-1/3 translate-y-1/3"></div>
+            {/* Semi-transparent abstract shape */}
+            <div className="absolute top-10 left-0 w-80 h-80 bg-red/2 dark:bg-red/3 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/4"></div>
+          </div>
+          
+          <div className="container-custom relative z-10">
             <ScrollReveal>
               <div className="max-w-4xl mx-auto text-center mb-16">
                 <h2 className="text-3xl md:text-4xl font-serif font-semibold mb-4 text-charcoal dark:text-white">
@@ -83,6 +93,7 @@ export default function Home() {
           </div>
         </section>
 
+        
         {/* Real Lives Section */}
         <section className="py-20 bg-blue/5 dark:bg-blue/10">
           <div className="container-custom">
