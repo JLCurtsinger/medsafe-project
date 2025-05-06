@@ -32,7 +32,7 @@ export const HeroSection = () => {
             <span className="inline-block px-4 py-2 rounded-full bg-blue/10 text-blue font-medium text-sm mb-4 dark:bg-blue/20 dark:text-white">
               Substance Interaction Awareness
             </span>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-charcoal dark:text-white leading-tight animate-fade-in">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-charcoal dark:text-white leading-tight animate-hero-fade-in">
               One Mistake. One Pill. 
               <span className="text-blue dark:text-blue-100"> One Life Changed Forever.</span>
             </h1>
