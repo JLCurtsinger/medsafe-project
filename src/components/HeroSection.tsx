@@ -40,7 +40,7 @@ export const HeroSection = () => {
                 <>
                   <div>One Mistake.</div>
                   <div>One Pill.</div>
-                  <div>One Life</div>
+                  <div className="text-blue dark:text-blue-100">One Life</div>
                   <div className="text-blue dark:text-blue-100">Changed Forever.</div>
                 </>
               ) : (
