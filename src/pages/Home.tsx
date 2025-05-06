@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import { HeroSection } from "@/components/HeroSection";
 import { shareSite } from "@/utils/shareUtils";
 import { SEO } from "@/components/SEO";
-
 export default function Home() {
   // Create structured data for homepage
   const homeSchema = {
@@ -21,15 +20,8 @@ export default function Home() {
       "query-input": "required name=search_term_string"
     }
   };
-
-  return (
-    <>
-      <SEO 
-        title="MedSafe Project - Prevent Adverse Drug Interactions with Smarter Tools"
-        description="Learn how to prevent harmful medication interactions and adverse drug events with reliable tools and education from the MedSafe Project."
-        keywords={["medication safety", "drug interactions", "adverse drug events", "medication tools", "patient safety", "healthcare safety"]}
-        schemaData={homeSchema}
-      />
+  return <>
+      <SEO title="MedSafe Project - Prevent Adverse Drug Interactions with Smarter Tools" description="Learn how to prevent harmful medication interactions and adverse drug events with reliable tools and education from the MedSafe Project." keywords={["medication safety", "drug interactions", "adverse drug events", "medication tools", "patient safety", "healthcare safety"]} schemaData={homeSchema} />
       
       <div className="pt-16">
         {/* ... keep existing code (Home page content) */}
@@ -44,9 +36,7 @@ export default function Home() {
                 <h2 className="text-3xl md:text-4xl font-serif font-semibold mb-4 text-charcoal dark:text-white">
                   The Problem We're Addressing
                 </h2>
-                <p className="text-lg text-gray-600 dark:text-gray-400">
-                  Adverse drug reactions are a leading cause of preventable harm in healthcare.
-                </p>
+                <p className="text-lg text-gray-600 dark:text-gray-400">Adverse drug reactions are a leading cause of preventable harm in healthcare.</p>
               </div>
             </ScrollReveal>
 
@@ -200,11 +190,7 @@ export default function Home() {
                   Help us raise awareness about medication safety. Share our resources, join our community, and be part of the solution.
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
-                  <Button 
-                    variant="outline" 
-                    className="bg-white text-blue hover:bg-white/90"
-                    onClick={shareSite}
-                  >
+                  <Button variant="outline" className="bg-white text-blue hover:bg-white/90" onClick={shareSite}>
                     Share This Site
                     <Share2 className="ml-2 h-4 w-4" />
                   </Button>
@@ -220,6 +206,5 @@ export default function Home() {
           </div>
         </section>
       </div>
-    </>
-  );
+    </>;
 }
