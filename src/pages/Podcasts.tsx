@@ -112,7 +112,23 @@ export default function Podcasts() {
                 allowFullScreen 
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
                 loading="lazy"
-                title="The MedSafe Podcast Episode Five"
+                title="El MedSafe Podcast Episodio cinco"
+              />
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal>
+            <div className="max-w-4xl mx-auto mb-16">
+              <iframe 
+                style={{ borderRadius: "12px" }} 
+                src="https://open.spotify.com/embed/episode/7AD5ltMCbxLYsf04m0WTpS?utm_source=generator&theme=0&t=0" 
+                width="100%" 
+                height="352" 
+                frameBorder="0" 
+                allowFullScreen 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                loading="lazy"
+                title="मेडसेफ पॉडकास्ट एपिसोड छह"
               />
             </div>
           </ScrollReveal>
