@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { ExternalLink, Mail } from "lucide-react";
 import { scrollToTop } from "@/utils/scrollUtils";
@@ -36,7 +37,7 @@ export function Footer() {
               Raising awareness about medication safety and educating the public on adverse drug interactions.
             </p>
             <div className="flex items-center space-x-4">
-              <a href="mailto:info@medsafeproject.org" className="text-blue hover:text-red transition-colors">
+              <a href="mailto:admin@medsafeproject.org" className="text-blue hover:text-red transition-colors">
                 <Mail className="h-5 w-5" />
               </a>
             </div>
