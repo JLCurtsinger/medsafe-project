@@ -22,10 +22,10 @@ export const ProblemSection = () => {
           </div>
           <div className="max-w-4xl mx-auto text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-serif font-semibold mb-4 text-white">
-              The Problem: Medication Harm Is Underreported
+              The Problem: Mixing Substances is the Real Killer.
             </h2>
             <p className="text-lg text-gray-300">
-              Adverse drug events create a significant public health burden, yet many cases go unreported or unrecognized. These statistics reveal the scale of the problem.
+              Harmful drug reactions are a significant public health burden, yet many cases go unreported or unrecognized. These statistics reveal the scale of the problem.
             </p>
           </div>
         </ScrollReveal>
