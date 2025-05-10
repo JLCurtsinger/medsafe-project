@@ -62,7 +62,7 @@ export default function Tools() {
         "Information on proper medication usage",
         "Free to use"
       ],
-      rating: 3,
+      rating: 4,
       url: "https://www.rxlist.com/pill-identification-tool/article.htm"
     },
     {
@@ -74,7 +74,7 @@ export default function Tools() {
         "Health measurement tracking",
         "Free with premium features"
       ],
-      rating: 3,
+      rating: 4,
       url: "https://www.mytherapyapp.com/"
     }
   ];
