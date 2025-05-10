@@ -1,6 +1,7 @@
 
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { AlertCircle } from "lucide-react";
+import { AnimatedNumber } from "@/components/AnimatedNumber";
 
 export const ProblemSection = () => {
   return (
@@ -33,7 +34,9 @@ export const ProblemSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <ScrollReveal delay={100}>
             <div className="rounded-lg p-8 text-left" style={{ background: 'linear-gradient(135deg, #e14c3a, #d13d2d)' }}>
-              <div className="text-5xl font-bold text-white mb-4">1.3M+</div>
+              <div className="text-5xl font-bold text-white mb-4">
+                <AnimatedNumber end={1300000} suffix="+" className="text-5xl font-bold text-white" />
+              </div>
               <p className="text-lg text-white/90 mb-8">
                 Annual emergency department visits due to adverse drug events in the United States alone
               </p>
@@ -45,7 +48,9 @@ export const ProblemSection = () => {
 
           <ScrollReveal delay={200}>
             <div className="rounded-lg p-8 text-left" style={{ background: 'linear-gradient(135deg, #269dbb, #1a8aa6)' }}>
-              <div className="text-5xl font-bold text-white mb-4">350,000</div>
+              <div className="text-5xl font-bold text-white mb-4">
+                <AnimatedNumber end={350000} className="text-5xl font-bold text-white" />
+              </div>
               <p className="text-lg text-white/90 mb-8">
                 Patients admitted to hospitals each year because of adverse drug events
               </p>
@@ -57,7 +62,9 @@ export const ProblemSection = () => {
 
           <ScrollReveal delay={300}>
             <div className="rounded-lg p-8 text-left" style={{ background: 'linear-gradient(135deg, #4a5568, #3a4354)' }}>
-              <div className="text-5xl font-bold text-white mb-4">40%</div>
+              <div className="text-5xl font-bold text-white mb-4">
+                <AnimatedNumber end={40} suffix="%" className="text-5xl font-bold text-white" />
+              </div>
               <p className="text-lg text-white/90 mb-8">
                 Of adults over 65 take 5 or more prescription medications regularly
               </p>
@@ -69,7 +76,9 @@ export const ProblemSection = () => {
 
           <ScrollReveal delay={400}>
             <div className="rounded-lg p-8 text-left" style={{ background: 'linear-gradient(135deg, #e57373 0%, #5c6bc0 100%)' }}>
-              <div className="text-5xl font-bold text-white mb-4">88%</div>
+              <div className="text-5xl font-bold text-white mb-4">
+                <AnimatedNumber end={88} suffix="%" className="text-5xl font-bold text-white" />
+              </div>
               <p className="text-lg text-white/90 mb-8">
                 Of adverse drug events are potentially preventable with better medication management
               </p>
