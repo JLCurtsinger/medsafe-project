@@ -40,10 +40,10 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <HelmetProvider>
-          <ActivePodcastProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
+          <BrowserRouter>
+            <ActivePodcastProvider>
+              <Toaster />
+              <Sonner />
               <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
               <div className="flex flex-col min-h-screen">
                 <Header />
@@ -62,8 +62,8 @@ const App: React.FC = () => {
                 <Footer />
                 <BackToTopButton />
               </div>
-            </BrowserRouter>
-          </ActivePodcastProvider>
+            </ActivePodcastProvider>
+          </BrowserRouter>
         </HelmetProvider>
       </TooltipProvider>
     </QueryClientProvider>
