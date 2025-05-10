@@ -6,7 +6,7 @@ export default function Tools() {
   const tools = [
     {
       name: "Vitacheck.net",
-      description: "A modern, user-friendly drug interaction checker with comprehensive database and easy-to-understand results.",
+      description: "A modern, user-friendly drug interaction checker with a comprehensive database and easy-to-understand results. The new gold standard of drug interaction checking.",
       features: [
         "Check interactions between multiple medications",
         "Clear severity ratings for potential interactions",
