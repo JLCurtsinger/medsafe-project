@@ -1,5 +1,6 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 interface ActivePodcastContextType {
   activePodcastSrc: string | null;
@@ -19,9 +20,22 @@ export const ActivePodcastProvider: React.FC<{ children: React.ReactNode }> = ({
   const [activePodcastTitle, setActivePodcastTitle] = useState<string | null>(null);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isPlayerVisible, setIsPlayerVisible] = useState(false);
+  const location = useLocation();
+  
+  // Auto-collapse player when navigating between pages
+  useEffect(() => {
+    if (isPlayerVisible && !isMinimized) {
+      setIsMinimized(true);
+    }
+  }, [location.pathname]);
 
   const setActivePodcast = (src: string, title: string) => {
-    setActivePodcastSrc(src);
+    // Modify the src to ensure autoplay
+    const autoplaySrc = src.includes('?') 
+      ? `${src}&autoplay=1` 
+      : `${src}?autoplay=1`;
+      
+    setActivePodcastSrc(autoplaySrc);
     setActivePodcastTitle(title);
     setIsPlayerVisible(true);
     setIsMinimized(false);

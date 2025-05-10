@@ -20,16 +20,23 @@ export const MiniPlayer: React.FC = () => {
     <div className={`fixed z-40 transition-all duration-300 bg-black/90 border-b border-gray-800 w-full shadow-lg ${isMinimized ? 'top-16 h-16' : 'top-16 h-96 md:h-80'}`}>
       <div className="container-custom h-full flex flex-col">
         <div className="flex justify-between items-center py-3 px-4">
-          <h3 className="text-sm md:text-base font-medium text-white truncate flex-1">
-            {isMinimized ? (
-              <>
-                <span className="text-red mr-1">▶</span> 
-                <span className="truncate">{activePodcastTitle || 'Now Playing'}</span>
-              </>
-            ) : (
-              'Now Playing'
-            )}
-          </h3>
+          <div className="flex items-center gap-3 flex-1">
+            <img 
+              src="/lovable-uploads/a3325ae9-2426-4c62-842a-a77ede97fad1.png" 
+              alt="The MedSafe Podcast" 
+              className="h-10 w-10 rounded-md object-cover" 
+            />
+            <h3 className="text-sm md:text-base font-medium text-white truncate flex-1">
+              {isMinimized ? (
+                <>
+                  <span className="text-red mr-1">▶</span> 
+                  <span className="truncate">{activePodcastTitle || 'Now Playing'}</span>
+                </>
+              ) : (
+                'Now Playing'
+              )}
+            </h3>
+          </div>
           <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
