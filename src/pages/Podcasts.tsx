@@ -63,19 +63,19 @@ export default function Podcasts() {
                       <div className="px-6 pb-4 space-y-6">
                         <Podcast 
                           src="https://open.spotify.com/embed/episode/2nMad50XXJwgLMxqlgxo9X?utm_source=generator&theme=0&t=0"
-                          title="Episode 1: Introduction to Medication Safety"
+                          title="Episode 1: The Hidden Killer in Your Medicine Cabinet"
                         />
                         <Podcast 
                           src="https://open.spotify.com/embed/episode/5dmqOpgjaGfDpu2im2G1v4?utm_source=generator&theme=0&t=0"
-                          title="Episode 2: Understanding Drug Interactions"
+                          title="Episode 2: We Thought It Was Safe: The Hidden Risk of Everyday Medications"
                         />
                         <Podcast 
                           src="https://open.spotify.com/embed/episode/3pnnOSmCJ2drxZQ38c5So1?utm_source=generator&theme=0&t=0"
-                          title="Episode 3: Patient Stories"
+                          title="Episode 3: One Pill, One Risk, One Life Changed Forever"
                         />
                         <Podcast 
                           src="https://open.spotify.com/embed/episode/3I9F8OeObx111FEQorzUdS?utm_source=generator&theme=0&t=0"
-                          title="Episode 4: Healthcare Provider Perspectives"
+                          title="Episode 4: Beyond the Warning Label: The Truth About Drug Interactions"
                         />
                       </div>
                     </AccordionContent>
@@ -90,11 +90,11 @@ export default function Podcasts() {
                       <div className="px-6 pb-4 space-y-6">
                         <Podcast 
                           src="https://open.spotify.com/embed/episode/42uST8EEtDLS0QFghAdVuR?utm_source=generator&theme=0&t=0"
-                          title="Episode 1: New Frontiers in Medication Safety"
+                          title="Episode 1: The Problem"
                         />
                         <Podcast 
                           src="https://open.spotify.com/embed/episode/63Z519Gobta6SxRr5fGp1J?utm_source=generator&theme=0&t=0"
-                          title="Episode 2: Technology Solutions"
+                          title="Episode 2: The Victims"
                         />
                       </div>
                     </AccordionContent>
