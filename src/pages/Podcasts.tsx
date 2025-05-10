@@ -52,12 +52,12 @@ export default function Podcasts() {
           </ScrollReveal>
 
           <ScrollReveal>
-            <Card className="max-w-4xl mx-auto mb-16 border-0 shadow-sm">
+            <Card className="max-w-4xl mx-auto mb-16 border-0 shadow-sm bg-black/30 dark:bg-black/40">
               <CardContent className="p-0">
                 <Accordion type="single" collapsible defaultValue={defaultLanguage} className="w-full">
                   {/* English Section */}
                   <AccordionItem value="english" className="border-b-0">
-                    <AccordionTrigger className="px-6 py-4 text-xl font-serif font-semibold text-charcoal dark:text-white">
+                    <AccordionTrigger className="px-6 py-4 text-xl md:text-2xl font-serif font-semibold text-charcoal dark:text-white">
                       English
                     </AccordionTrigger>
                     <AccordionContent>
@@ -65,7 +65,7 @@ export default function Podcasts() {
                         <Accordion type="single" collapsible defaultValue={defaultSeason} className="w-full">
                           {/* Season 1 */}
                           <AccordionItem value="season1" className="border-b-0">
-                            <AccordionTrigger className="text-lg font-medium">
+                            <AccordionTrigger className="text-lg md:text-xl font-medium">
                               Season 1
                             </AccordionTrigger>
                             <AccordionContent>
@@ -92,7 +92,7 @@ export default function Podcasts() {
                           
                           {/* Season 2 */}
                           <AccordionItem value="season2" className="border-b-0">
-                            <AccordionTrigger className="text-lg font-medium">
+                            <AccordionTrigger className="text-lg md:text-xl font-medium">
                               Season 2
                             </AccordionTrigger>
                             <AccordionContent>
@@ -115,7 +115,7 @@ export default function Podcasts() {
                   
                   {/* Español Section */}
                   <AccordionItem value="espanol" className="border-b-0">
-                    <AccordionTrigger className="px-6 py-4 text-xl font-serif font-semibold text-charcoal dark:text-white">
+                    <AccordionTrigger className="px-6 py-4 text-xl md:text-2xl font-serif font-semibold text-charcoal dark:text-white">
                       Español (Spanish)
                     </AccordionTrigger>
                     <AccordionContent>
@@ -123,7 +123,7 @@ export default function Podcasts() {
                         <Accordion type="single" collapsible defaultValue="season1_es" className="w-full">
                           {/* Season 1 - Spanish */}
                           <AccordionItem value="season1_es" className="border-b-0">
-                            <AccordionTrigger className="text-lg font-medium">
+                            <AccordionTrigger className="text-lg md:text-xl font-medium">
                               Temporada 1
                             </AccordionTrigger>
                             <AccordionContent>
@@ -142,7 +142,7 @@ export default function Podcasts() {
                   
                   {/* Hindi Section */}
                   <AccordionItem value="hindi" className="border-b-0">
-                    <AccordionTrigger className="px-6 py-4 text-xl font-serif font-semibold text-charcoal dark:text-white">
+                    <AccordionTrigger className="px-6 py-4 text-xl md:text-2xl font-serif font-semibold text-charcoal dark:text-white">
                       हिंदी (Hindi)
                     </AccordionTrigger>
                     <AccordionContent>
@@ -150,7 +150,7 @@ export default function Podcasts() {
                         <Accordion type="single" collapsible defaultValue="season1_hi" className="w-full">
                           {/* Season 1 - Hindi */}
                           <AccordionItem value="season1_hi" className="border-b-0">
-                            <AccordionTrigger className="text-lg font-medium">
+                            <AccordionTrigger className="text-lg md:text-xl font-medium">
                               सीज़न 1
                             </AccordionTrigger>
                             <AccordionContent>
