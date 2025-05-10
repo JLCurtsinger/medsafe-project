@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 export const ProblemSection = () => {
   return (
-    <section className="py-20 bg-white dark:bg-charcoal relative">
+    <section className="py-20 bg-gradient-to-b from-[#edf4f8] to-[#fdfdfd] dark:bg-charcoal relative">
       {/* Added subtle visual element for the Problem section */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Subtle pattern overlay */}
