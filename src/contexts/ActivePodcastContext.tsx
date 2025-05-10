@@ -22,7 +22,7 @@ export const ActivePodcastProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isPlayerVisible, setIsPlayerVisible] = useState(false);
   const location = useLocation();
   
-  // Auto-collapse player when navigating between pages
+  // Auto-collapse player when navigating between pages, but don't stop playback
   useEffect(() => {
     if (isPlayerVisible && !isMinimized) {
       setIsMinimized(true);

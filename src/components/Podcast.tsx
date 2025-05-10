@@ -37,7 +37,7 @@ export function Podcast({ src, title, isVisible = false }: PodcastProps) {
           </div>
           <div className="bg-gradient-to-b from-black/40 to-black/20 absolute inset-0 z-0"></div>
           <img 
-            src="https://i.scdn.co/image/ab6765630000ba8aef23f9946e7ce478aa295088" 
+            src="/lovable-uploads/a3325ae9-2426-4c62-842a-a77ede97fad1.png" 
             alt={title} 
             className="w-full object-cover h-[222px] opacity-50"
           />
