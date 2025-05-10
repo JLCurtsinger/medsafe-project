@@ -14,7 +14,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function Podcasts() {
   const isMobile = useIsMobile();
-  const [defaultLanguage] = useState("english");
   const [defaultSeason] = useState("season1");
   
   // Schema data for the podcast page
@@ -54,61 +53,49 @@ export default function Podcasts() {
           <ScrollReveal>
             <Card className="max-w-4xl mx-auto mb-16 border-0 shadow-sm bg-black/30 dark:bg-black/40">
               <CardContent className="p-0">
-                <Accordion type="single" collapsible defaultValue={defaultLanguage} className="w-full">
-                  {/* English Section */}
-                  <AccordionItem value="english" className="border-b-0">
+                <Accordion type="single" collapsible defaultValue={defaultSeason} className="w-full">
+                  {/* Season 1 */}
+                  <AccordionItem value="season1" className="border-b-0">
                     <AccordionTrigger className="px-6 py-4 text-xl md:text-2xl font-serif font-semibold text-charcoal dark:text-white">
-                      English
+                      Season 1
                     </AccordionTrigger>
                     <AccordionContent>
-                      <div className="px-6 pb-4">
-                        <Accordion type="single" collapsible defaultValue={defaultSeason} className="w-full">
-                          {/* Season 1 */}
-                          <AccordionItem value="season1" className="border-b-0">
-                            <AccordionTrigger className="text-lg md:text-xl font-medium">
-                              Season 1
-                            </AccordionTrigger>
-                            <AccordionContent>
-                              <div className="space-y-6 mb-6">
-                                <Podcast 
-                                  src="https://open.spotify.com/embed/episode/2nMad50XXJwgLMxqlgxo9X?utm_source=generator&theme=0&t=0"
-                                  title="Episode 1: Introduction to Medication Safety"
-                                />
-                                <Podcast 
-                                  src="https://open.spotify.com/embed/episode/5dmqOpgjaGfDpu2im2G1v4?utm_source=generator&theme=0&t=0"
-                                  title="Episode 2: Understanding Drug Interactions"
-                                />
-                                <Podcast 
-                                  src="https://open.spotify.com/embed/episode/3pnnOSmCJ2drxZQ38c5So1?utm_source=generator&theme=0&t=0"
-                                  title="Episode 3: Patient Stories"
-                                />
-                                <Podcast 
-                                  src="https://open.spotify.com/embed/episode/3I9F8OeObx111FEQorzUdS?utm_source=generator&theme=0&t=0"
-                                  title="Episode 4: Healthcare Provider Perspectives"
-                                />
-                              </div>
-                            </AccordionContent>
-                          </AccordionItem>
-                          
-                          {/* Season 2 */}
-                          <AccordionItem value="season2" className="border-b-0">
-                            <AccordionTrigger className="text-lg md:text-xl font-medium">
-                              Season 2
-                            </AccordionTrigger>
-                            <AccordionContent>
-                              <div className="space-y-6 mb-6">
-                                <Podcast 
-                                  src="https://open.spotify.com/embed/episode/42uST8EEtDLS0QFghAdVuR?utm_source=generator&theme=0&t=0"
-                                  title="Episode 1: New Frontiers in Medication Safety"
-                                />
-                                <Podcast 
-                                  src="https://open.spotify.com/embed/episode/63Z519Gobta6SxRr5fGp1J?utm_source=generator&theme=0&t=0"
-                                  title="Episode 2: Technology Solutions"
-                                />
-                              </div>
-                            </AccordionContent>
-                          </AccordionItem>
-                        </Accordion>
+                      <div className="px-6 pb-4 space-y-6">
+                        <Podcast 
+                          src="https://open.spotify.com/embed/episode/2nMad50XXJwgLMxqlgxo9X?utm_source=generator&theme=0&t=0"
+                          title="Episode 1: Introduction to Medication Safety"
+                        />
+                        <Podcast 
+                          src="https://open.spotify.com/embed/episode/5dmqOpgjaGfDpu2im2G1v4?utm_source=generator&theme=0&t=0"
+                          title="Episode 2: Understanding Drug Interactions"
+                        />
+                        <Podcast 
+                          src="https://open.spotify.com/embed/episode/3pnnOSmCJ2drxZQ38c5So1?utm_source=generator&theme=0&t=0"
+                          title="Episode 3: Patient Stories"
+                        />
+                        <Podcast 
+                          src="https://open.spotify.com/embed/episode/3I9F8OeObx111FEQorzUdS?utm_source=generator&theme=0&t=0"
+                          title="Episode 4: Healthcare Provider Perspectives"
+                        />
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  {/* Season 2 */}
+                  <AccordionItem value="season2" className="border-b-0">
+                    <AccordionTrigger className="px-6 py-4 text-xl md:text-2xl font-serif font-semibold text-charcoal dark:text-white">
+                      Season 2
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="px-6 pb-4 space-y-6">
+                        <Podcast 
+                          src="https://open.spotify.com/embed/episode/42uST8EEtDLS0QFghAdVuR?utm_source=generator&theme=0&t=0"
+                          title="Episode 1: New Frontiers in Medication Safety"
+                        />
+                        <Podcast 
+                          src="https://open.spotify.com/embed/episode/63Z519Gobta6SxRr5fGp1J?utm_source=generator&theme=0&t=0"
+                          title="Episode 2: Technology Solutions"
+                        />
                       </div>
                     </AccordionContent>
                   </AccordionItem>
