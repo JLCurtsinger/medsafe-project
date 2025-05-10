@@ -73,7 +73,6 @@ export function TestimonialSlider() {
                     <AvatarImage src={testimonial.image} alt={testimonial.author} className="object-cover" />
                   </Avatar>
                   <blockquote className="relative">
-                    <div className="text-3xl text-red font-serif mb-6">"</div>
                     <p className="text-lg md:text-xl italic mb-6 text-gray-700 dark:text-gray-300">
                       {testimonial.quote}
                     </p>
