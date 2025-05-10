@@ -19,21 +19,21 @@ const testimonials: Testimonial[] = [
     quote: "After my mother experienced a severe reaction from two medications that shouldn't have been prescribed together, I realized how critical medication safety education really is.",
     author: "Sarah Johnson",
     role: "Patient Advocate",
-    image: "/lovable-uploads/8a40a1dd-9e4e-49b6-a9ab-5f4088d64ade.png",
+    image: "/lovable-uploads/sarahJohnson.jpeg",
   },
   {
     id: 2,
     quote: "As a pharmacist, I see potential drug interactions every day. Better awareness and tools are needed to prevent these incidents before they happen.",
     author: "Dr. Miguel Ramirez",
     role: "Clinical Pharmacist",
-    image: "/lovable-uploads/02b407c1-3e5c-4d83-ba47-de13084a2151.png",
+    image: "/lovable-uploads/MiguelRamirez.jpeg",
   },
   {
     id: 3,
     quote: "I nearly lost my father to a preventable adverse drug reaction. The MedSafe Project is doing vital work to raise awareness about these underreported dangers.",
     author: "James Chen",
     role: "Family Caregiver",
-    image: "/lovable-uploads/15fc01fb-7936-49ac-a0ee-ddea34c0d484.png",
+    image: "/lovable-uploads/JamesChen.jpeg",
   },
 ];
 
