@@ -1,5 +1,3 @@
-
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -144,13 +142,13 @@
   }
 }
 
-/* Add new pulse glow animation */
+/* Update pulse glow animation to be more subtle */
 @keyframes pulseGlow {
   0% {
     box-shadow: 0 0 0 0 rgba(30, 111, 121, 0.2);
   }
-  70% {
-    box-shadow: 0 0 0 10px rgba(30, 111, 121, 0);
+  50% {
+    box-shadow: 0 0 0 8px rgba(30, 111, 121, 0);
   }
   100% {
     box-shadow: 0 0 0 0 rgba(30, 111, 121, 0);
@@ -165,7 +163,7 @@
   animation: heroFadeIn 1.2s ease-out forwards;
 }
 
+/* Adjust the pulse glow animation to be slower and more subtle */
 .animate-pulse-glow {
-  animation: pulseGlow 5s infinite;
+  animation: pulseGlow 5s ease-in-out infinite;
 }
-
