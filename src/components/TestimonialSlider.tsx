@@ -2,12 +2,15 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface Testimonial {
   id: number;
   quote: string;
   author: string;
   role: string;
+  image: string;
 }
 
 const testimonials: Testimonial[] = [
@@ -16,18 +19,21 @@ const testimonials: Testimonial[] = [
     quote: "After my mother experienced a severe reaction from two medications that shouldn't have been prescribed together, I realized how critical medication safety education really is.",
     author: "Sarah Johnson",
     role: "Patient Advocate",
+    image: "/lovable-uploads/8a40a1dd-9e4e-49b6-a9ab-5f4088d64ade.png",
   },
   {
     id: 2,
     quote: "As a pharmacist, I see potential drug interactions every day. Better awareness and tools are needed to prevent these incidents before they happen.",
     author: "Dr. Miguel Ramirez",
     role: "Clinical Pharmacist",
+    image: "/lovable-uploads/02b407c1-3e5c-4d83-ba47-de13084a2151.png",
   },
   {
     id: 3,
     quote: "I nearly lost my father to a preventable adverse drug reaction. The MedSafe Project is doing vital work to raise awareness about these underreported dangers.",
     author: "James Chen",
     role: "Family Caregiver",
+    image: "/lovable-uploads/15fc01fb-7936-49ac-a0ee-ddea34c0d484.png",
   },
 ];
 
@@ -60,20 +66,29 @@ export function TestimonialSlider() {
             key={testimonial.id}
             className="min-w-full px-4"
           >
-            <blockquote className="relative">
-              <div className="text-3xl text-red font-serif mb-6">"</div>
-              <p className="text-lg md:text-xl italic mb-6 text-gray-700 dark:text-gray-300">
-                {testimonial.quote}
-              </p>
-              <footer>
-                <div className="font-medium text-charcoal dark:text-white">
-                  {testimonial.author}
+            <Card className="border-0 shadow-none bg-transparent">
+              <CardContent className="p-0">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+                  <Avatar className="w-20 h-20 border-2 border-gray-200 dark:border-gray-700">
+                    <AvatarImage src={testimonial.image} alt={testimonial.author} className="object-cover" />
+                  </Avatar>
+                  <blockquote className="relative">
+                    <div className="text-3xl text-red font-serif mb-6">"</div>
+                    <p className="text-lg md:text-xl italic mb-6 text-gray-700 dark:text-gray-300">
+                      {testimonial.quote}
+                    </p>
+                    <footer>
+                      <div className="font-medium text-charcoal dark:text-white">
+                        {testimonial.author}
+                      </div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {testimonial.role}
+                      </div>
+                    </footer>
+                  </blockquote>
                 </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  {testimonial.role}
-                </div>
-              </footer>
-            </blockquote>
+              </CardContent>
+            </Card>
           </div>
         ))}
       </div>
