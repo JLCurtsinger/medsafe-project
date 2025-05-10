@@ -47,6 +47,7 @@ const App: React.FC = () => {
               <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
               <div className="flex flex-col min-h-screen">
                 <Header />
+                {/* MiniPlayer moved outside the main content area and Routes component */}
                 <MiniPlayer />
                 <main className="flex-grow">
                   <Routes>

@@ -43,10 +43,14 @@ export const ActivePodcastProvider: React.FC<{ children: React.ReactNode }> = ({
         : `${src}?autoplay=1`;
     }
     
-    setActivePodcastSrc(autoplaySrc);
-    setActivePodcastTitle(title);
-    setIsPlayerVisible(true);
-    setIsMinimized(false);
+    // Using setTimeout to ensure the iframe is rendered in the same user interaction event
+    // This helps satisfy browser autoplay policies
+    setTimeout(() => {
+      setActivePodcastSrc(autoplaySrc);
+      setActivePodcastTitle(title);
+      setIsPlayerVisible(true);
+      setIsMinimized(false);
+    }, 0);
   };
 
   const clearActivePodcast = () => {
