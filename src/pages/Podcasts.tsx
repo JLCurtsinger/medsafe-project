@@ -11,10 +11,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Podcast } from "@/components/Podcast";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { PodcastProvider } from "@/contexts/PodcastContext";
 
 export default function Podcasts() {
   const isMobile = useIsMobile();
+  const [expandedEpisode, setExpandedEpisode] = useState<string | null>("season1-episode1");
   const [defaultSeason] = useState("season1");
   
   // Schema data for the podcast page
@@ -26,6 +26,15 @@ export default function Podcasts() {
     "associatedMedia": {
       "@type": "MediaObject",
       "contentUrl": "https://open.spotify.com/episode/2nMad50XXJwgLMxqlgxo9X"
+    }
+  };
+
+  // Function to handle episode content clicks to track which one is expanded
+  const handleEpisodeClick = (episodeId: string) => {
+    if (expandedEpisode === episodeId) {
+      setExpandedEpisode(null);
+    } else {
+      setExpandedEpisode(episodeId);
     }
   };
 
@@ -52,113 +61,135 @@ export default function Podcasts() {
           </ScrollReveal>
 
           <ScrollReveal>
-            <PodcastProvider>
-              <Card className="max-w-4xl mx-auto mb-16 border-0 shadow-sm bg-black/30 dark:bg-black/40">
-                <CardContent className="p-0">
-                  <Accordion type="single" collapsible defaultValue={defaultSeason} className="w-full">
-                    {/* Season 1 */}
-                    <AccordionItem value="season1" className="border-b-0">
-                      <AccordionTrigger className="px-6 py-4 text-xl md:text-2xl font-serif font-semibold text-charcoal dark:text-white">
-                        Season 1
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="px-6 pb-4 space-y-6">
+            <Card className="max-w-4xl mx-auto mb-16 border-0 shadow-sm bg-black/30 dark:bg-black/40">
+              <CardContent className="p-0">
+                <Accordion type="single" collapsible defaultValue={defaultSeason} className="w-full">
+                  {/* Season 1 */}
+                  <AccordionItem value="season1" className="border-b-0">
+                    <AccordionTrigger className="px-6 py-4 text-xl md:text-2xl font-serif font-semibold text-charcoal dark:text-white">
+                      Season 1
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="px-6 pb-4 space-y-6">
+                        <div onClick={() => handleEpisodeClick("season1-episode1")}>
                           <Podcast 
                             src="https://open.spotify.com/embed/episode/2nMad50XXJwgLMxqlgxo9X?utm_source=generator&theme=0&t=0"
                             title="Episode 1: The Hidden Killer in Your Medicine Cabinet"
+                            isVisible={expandedEpisode === "season1-episode1"}
                           />
+                        </div>
+                        <div onClick={() => handleEpisodeClick("season1-episode2")}>
                           <Podcast 
                             src="https://open.spotify.com/embed/episode/5dmqOpgjaGfDpu2im2G1v4?utm_source=generator&theme=0&t=0"
                             title="Episode 2: We Thought It Was Safe: The Hidden Risk of Everyday Medications"
+                            isVisible={expandedEpisode === "season1-episode2"}
                           />
+                        </div>
+                        <div onClick={() => handleEpisodeClick("season1-episode3")}>
                           <Podcast 
                             src="https://open.spotify.com/embed/episode/3pnnOSmCJ2drxZQ38c5So1?utm_source=generator&theme=0&t=0"
                             title="Episode 3: One Pill, One Risk, One Life Changed Forever"
+                            isVisible={expandedEpisode === "season1-episode3"}
                           />
+                        </div>
+                        <div onClick={() => handleEpisodeClick("season1-episode4")}>
                           <Podcast 
                             src="https://open.spotify.com/embed/episode/3I9F8OeObx111FEQorzUdS?utm_source=generator&theme=0&t=0"
                             title="Episode 4: Beyond the Warning Label: The Truth About Drug Interactions"
+                            isVisible={expandedEpisode === "season1-episode4"}
                           />
                         </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                    
-                    {/* Season 2 */}
-                    <AccordionItem value="season2" className="border-b-0">
-                      <AccordionTrigger className="px-6 py-4 text-xl md:text-2xl font-serif font-semibold text-charcoal dark:text-white">
-                        Season 2
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="px-6 pb-4 space-y-6">
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  {/* Season 2 */}
+                  <AccordionItem value="season2" className="border-b-0">
+                    <AccordionTrigger className="px-6 py-4 text-xl md:text-2xl font-serif font-semibold text-charcoal dark:text-white">
+                      Season 2
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="px-6 pb-4 space-y-6">
+                        <div onClick={() => handleEpisodeClick("season2-episode1")}>
                           <Podcast 
                             src="https://open.spotify.com/embed/episode/42uST8EEtDLS0QFghAdVuR?utm_source=generator&theme=0&t=0"
                             title="Episode 1: The Problem"
+                            isVisible={expandedEpisode === "season2-episode1"}
                           />
+                        </div>
+                        <div onClick={() => handleEpisodeClick("season2-episode2")}>
                           <Podcast 
                             src="https://open.spotify.com/embed/episode/63Z519Gobta6SxRr5fGp1J?utm_source=generator&theme=0&t=0"
                             title="Episode 2: The Victims"
+                            isVisible={expandedEpisode === "season2-episode2"}
                           />
                         </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                    
-                    {/* Español Section */}
-                    <AccordionItem value="espanol" className="border-b-0">
-                      <AccordionTrigger className="px-6 py-4 text-xl md:text-2xl font-serif font-semibold text-charcoal dark:text-white">
-                        Español (Spanish)
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="px-6 pb-4">
-                          <Accordion type="single" collapsible defaultValue="season1_es" className="w-full">
-                            {/* Season 1 - Spanish */}
-                            <AccordionItem value="season1_es" className="border-b-0">
-                              <AccordionTrigger className="text-lg md:text-xl font-medium">
-                                Temporada 1
-                              </AccordionTrigger>
-                              <AccordionContent>
-                                <div className="space-y-6 mb-6">
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  {/* Español Section */}
+                  <AccordionItem value="espanol" className="border-b-0">
+                    <AccordionTrigger className="px-6 py-4 text-xl md:text-2xl font-serif font-semibold text-charcoal dark:text-white">
+                      Español (Spanish)
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="px-6 pb-4">
+                        <Accordion type="single" collapsible defaultValue="season1_es" className="w-full">
+                          {/* Season 1 - Spanish */}
+                          <AccordionItem value="season1_es" className="border-b-0">
+                            <AccordionTrigger className="text-lg md:text-xl font-medium">
+                              Temporada 1
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <div className="space-y-6 mb-6">
+                                <div onClick={() => handleEpisodeClick("espanol-episode1")}>
                                   <Podcast 
                                     src="https://open.spotify.com/embed/episode/2Gq3gXq4ArtsQV3Jj8R2Wx?utm_source=generator&theme=0&t=0"
                                     title="Episodio 1: Introducción a la Seguridad de Medicamentos"
+                                    isVisible={expandedEpisode === "espanol-episode1"}
                                   />
                                 </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          </Accordion>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                    
-                    {/* Hindi Section */}
-                    <AccordionItem value="hindi" className="border-b-0">
-                      <AccordionTrigger className="px-6 py-4 text-xl md:text-2xl font-serif font-semibold text-charcoal dark:text-white">
-                        हिंदी (Hindi)
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="px-6 pb-4">
-                          <Accordion type="single" collapsible defaultValue="season1_hi" className="w-full">
-                            {/* Season 1 - Hindi */}
-                            <AccordionItem value="season1_hi" className="border-b-0">
-                              <AccordionTrigger className="text-lg md:text-xl font-medium">
-                                सीज़न 1
-                              </AccordionTrigger>
-                              <AccordionContent>
-                                <div className="space-y-6 mb-6">
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  {/* Hindi Section */}
+                  <AccordionItem value="hindi" className="border-b-0">
+                    <AccordionTrigger className="px-6 py-4 text-xl md:text-2xl font-serif font-semibold text-charcoal dark:text-white">
+                      हिंदी (Hindi)
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="px-6 pb-4">
+                        <Accordion type="single" collapsible defaultValue="season1_hi" className="w-full">
+                          {/* Season 1 - Hindi */}
+                          <AccordionItem value="season1_hi" className="border-b-0">
+                            <AccordionTrigger className="text-lg md:text-xl font-medium">
+                              सीज़न 1
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <div className="space-y-6 mb-6">
+                                <div onClick={() => handleEpisodeClick("hindi-episode1")}>
                                   <Podcast 
                                     src="https://open.spotify.com/embed/episode/7AD5ltMCbxLYsf04m0WTpS?utm_source=generator&theme=0&t=0"
                                     title="एपिसोड 1: दवा सुरक्षा का परिचय"
+                                    isVisible={expandedEpisode === "hindi-episode1"}
                                   />
                                 </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          </Accordion>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                </CardContent>
-              </Card>
-            </PodcastProvider>
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </CardContent>
+            </Card>
           </ScrollReveal>
           
           <ScrollReveal>
