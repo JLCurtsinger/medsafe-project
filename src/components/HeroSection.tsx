@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { BookOpen, Info, AlertTriangle, ShieldCheck, Pill, PlusCircle, CircleDot } from "lucide-react";
@@ -75,16 +76,17 @@ export const HeroSection = () => {
               Millions are <span className="font-bold text-blue">harmed</span> each year by <span className="font-bold text-blue">preventable</span> drug interactions. <span className="font-bold text-blue">It's time for change.</span>
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
+              {/* Reordered buttons: How Safe Are Your Meds first, Top 10 second */}
+              <Link to="/tools" onClick={handleLinkClick}>
+                <Button variant="outline" className="border-blue text-blue hover:bg-blue/10 font-medium transition-all px-6 py-3 rounded-lg dark:border-white/30 dark:text-white dark:hover:bg-blue/20 animate-pulse-glow">
+                  How Safe Are Your Meds? Find Out
+                  <ShieldCheck className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
               <Link to="/articles" onClick={handleLinkClick}>
                 <Button className="bg-blue hover:bg-blue/90 text-white font-medium transition-all shadow-md hover:shadow-lg px-6 py-3 rounded-lg">
                   See the Top 10 Dangerous Drug Combos
                   <AlertTriangle className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link to="/tools" onClick={handleLinkClick}>
-                <Button variant="outline" className="border-blue text-blue hover:bg-blue/10 font-medium transition-all px-6 py-3 rounded-lg dark:border-white/30 dark:text-white dark:hover:bg-blue/20">
-                  How Safe Are Your Meds? Find Out
-                  <ShieldCheck className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
@@ -134,3 +136,4 @@ export const HeroSection = () => {
     </section>
   );
 };
+
