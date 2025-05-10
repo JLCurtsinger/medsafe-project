@@ -10,8 +10,6 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { GoogleAnalytics } from "./components/GoogleAnalytics";
 import { BackToTopButton } from "./components/BackToTopButton";
-import { MiniPlayer } from "./components/MiniPlayer";
-import { ActivePodcastProvider } from "./contexts/ActivePodcastContext";
 import Home from "./pages/Home";
 import Articles from "./pages/Articles";
 import ArticleDetail from "./pages/ArticleDetail";
@@ -40,30 +38,26 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <HelmetProvider>
+          <Toaster />
+          <Sonner />
           <BrowserRouter>
-            <ActivePodcastProvider>
-              <Toaster />
-              <Sonner />
-              <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
-              <div className="flex flex-col min-h-screen">
-                <Header />
-                {/* MiniPlayer moved outside the main content area and Routes component */}
-                <MiniPlayer />
-                <main className="flex-grow">
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/articles" element={<Articles />} />
-                    <Route path="/article/:slug" element={<ArticleDetail />} />
-                    <Route path="/podcasts" element={<Podcasts />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/tools" element={<Tools />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </main>
-                <Footer />
-                <BackToTopButton />
-              </div>
-            </ActivePodcastProvider>
+            <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/articles" element={<Articles />} />
+                  <Route path="/article/:slug" element={<ArticleDetail />} />
+                  <Route path="/podcasts" element={<Podcasts />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/tools" element={<Tools />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+              <Footer />
+              <BackToTopButton />
+            </div>
           </BrowserRouter>
         </HelmetProvider>
       </TooltipProvider>
