@@ -1,6 +1,7 @@
 
 import React from "react";
 import { useActivePodcast } from "../contexts/ActivePodcastContext";
+import { AspectRatio } from "./ui/aspect-ratio";
 
 interface PodcastProps {
   src: string;
@@ -36,11 +37,13 @@ export function Podcast({ src, title, isVisible = false }: PodcastProps) {
             </div>
           </div>
           <div className="bg-gradient-to-b from-black/40 to-black/20 absolute inset-0 z-0"></div>
-          <img 
-            src="/lovable-uploads/a3325ae9-2426-4c62-842a-a77ede97fad1.png" 
-            alt={title} 
-            className="w-full object-cover h-[222px] opacity-50"
-          />
+          <div className="w-full h-[222px] flex items-center justify-center">
+            <img 
+              src="/lovable-uploads/a3325ae9-2426-4c62-842a-a77ede97fad1.png" 
+              alt={title} 
+              className="max-h-full max-w-full object-contain opacity-50"
+            />
+          </div>
         </div>
       ) : (
         // If not visible, just show a play button
