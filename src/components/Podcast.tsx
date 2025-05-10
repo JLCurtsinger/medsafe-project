@@ -12,9 +12,17 @@ interface PodcastProps {
 export function Podcast({ src, title, isVisible = false }: PodcastProps) {
   const { setActivePodcast } = useActivePodcast();
 
-  // The play button for the podcast
+  // Ensure the Spotify URL has autoplay parameter when clicked
   const handlePlayClick = () => {
-    setActivePodcast(src, title);
+    // Add autoplay parameter if needed
+    let autoplaySrc = src;
+    if (!autoplaySrc.includes('autoplay=1')) {
+      autoplaySrc = src.includes('?') 
+        ? `${src}&autoplay=1` 
+        : `${src}?autoplay=1`;
+    }
+    
+    setActivePodcast(autoplaySrc, title);
   };
 
   return (

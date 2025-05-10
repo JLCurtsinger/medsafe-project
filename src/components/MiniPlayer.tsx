@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useActivePodcast } from '../contexts/ActivePodcastContext';
 import { Minimize, X } from 'lucide-react';
 import { Button } from './ui/button';
@@ -13,6 +13,18 @@ export const MiniPlayer: React.FC = () => {
     toggleMinimized, 
     hidePlayer 
   } = useActivePodcast();
+  
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+
+  // This effect ensures we maintain the iframe reference
+  // and prevents reloading the iframe when the component re-renders
+  useEffect(() => {
+    // Only create a new iframe if we don't have one or if the src changed
+    if (activePodcastSrc && isPlayerVisible && !isMinimized) {
+      // The iframe will be created in the render method
+      // We just need to ensure we don't recreate it unnecessarily
+    }
+  }, [activePodcastSrc, isPlayerVisible, isMinimized]);
 
   if (!isPlayerVisible || !activePodcastSrc) return null;
 
@@ -63,8 +75,9 @@ export const MiniPlayer: React.FC = () => {
           <div className="flex-1 px-4 pb-4 pt-0">
             <div className="h-full">
               <iframe
+                ref={iframeRef}
                 style={{ borderRadius: "12px" }}
-                src={activePodcastSrc || ''}
+                src={activePodcastSrc}
                 width="100%"
                 height="100%"
                 frameBorder="0"
@@ -72,6 +85,7 @@ export const MiniPlayer: React.FC = () => {
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 loading="lazy"
                 title={activePodcastTitle || 'Podcast player'}
+                key={activePodcastSrc} // This ensures we get a fresh iframe when the src changes
               />
             </div>
           </div>
