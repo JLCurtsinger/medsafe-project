@@ -48,6 +48,7 @@ Remember that your pharmacist is an excellent resource for medication safety que
 By staying informed and proactive about your medications, you can significantly reduce your risk of experiencing harmful drug interactions.`,
     pullQuote: "Using a single pharmacy for all your prescriptions allows their system to automatically flag potential drug interactions - it's one of the simplest yet most effective safety measures."
   },
+  
   {
     id: 2,
     title: "How Medication Errors Changed Their Lives: Three Patient Stories",
@@ -104,6 +105,7 @@ These stories highlight several important lessons:
 While these stories highlight system failures, they also demonstrate the importance of patient awareness and proactive communication. By learning from these experiences, we can all become better equipped to prevent similar medication errors.`,
     pullQuote: "After my experience, I realized that I needed to become the central coordinator of my healthcare information – I couldn't assume the system would protect me from medication errors."
   },
+  
   {
     id: 3,
     title: "Latest Research Reveals Extent of Medication Harm in Healthcare Settings",
@@ -158,6 +160,7 @@ Despite advances in healthcare technology and increased awareness of patient saf
 For patients and healthcare consumers, this research underscores the importance of active engagement in medication management. Asking questions, keeping accurate medication lists, and ensuring all providers have complete information about all medications being taken can help reduce the risk of experiencing a preventable adverse drug event.`,
     pullQuote: "For every adverse drug event that brings a patient to a doctor or hospital, an estimated 14 additional medication-related problems occur that don't result in medical attention but may still significantly impact patients' quality of life."
   },
+  
   {
     id: 4,
     title: "The Role of Technology in Preventing Medication Errors",
@@ -241,6 +244,7 @@ While technology alone cannot eliminate all medication errors, these digital too
 For patients, understanding these technologies and advocating for their appropriate use can be an important part of ensuring medication safety.`,
     pullQuote: "Technology can dramatically improve medication safety, but it's most effective when seen as a tool to augment human judgment, not replace it. The ideal approach combines technological safeguards with engaged healthcare providers and informed patients."
   },
+  
   {
     id: 5,
     title: "Special Medication Concerns for Older Adults",
@@ -323,6 +327,7 @@ Family members and caregivers can take several steps to improve medication safet
 By understanding the unique medication safety concerns facing older adults, patients, caregivers, and healthcare providers can work together to reduce the risk of adverse drug events and ensure that medications provide benefits without causing harm.`,
     pullQuote: "For older adults, sometimes the best medication intervention is to discontinue a drug that's no longer needed. Deprescribing—the thoughtful process of reducing unnecessary medications—should be a routine part of care for seniors."
   },
+  
   {
     id: 6,
     title: "How to Create and Maintain Your Personal Medication Record",
