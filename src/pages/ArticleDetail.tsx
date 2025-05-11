@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ScrollReveal } from "@/components/ScrollReveal";
@@ -7,6 +8,8 @@ import { articles } from "@/data/articles";
 import { NotFound } from "./NotFound";
 import { shareContent } from "@/utils/shareUtils";
 import { Helmet } from "react-helmet-async";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function ArticleDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -128,11 +131,33 @@ export default function ArticleDetail() {
             
             <ScrollReveal>
               <div className="prose prose-lg dark:prose-invert max-w-none mb-12">
-                {article.fullText.split('\n\n').map((paragraph, idx) => (
-                  <p key={idx} className="mb-6 text-gray-800 dark:text-gray-200">
-                    {paragraph}
-                  </p>
-                ))}
+                {/* Replace the paragraph mapping with ReactMarkdown */}
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    h1: ({ node, ...props }) => <h1 className="text-3xl font-serif font-semibold mb-6 mt-8" {...props} />,
+                    h2: ({ node, ...props }) => <h2 className="text-2xl font-serif font-semibold mb-4 mt-8" {...props} />,
+                    h3: ({ node, ...props }) => <h3 className="text-xl font-serif font-semibold mb-3 mt-6" {...props} />,
+                    h4: ({ node, ...props }) => <h4 className="text-lg font-serif font-semibold mb-2 mt-4" {...props} />,
+                    p: ({ node, ...props }) => <p className="mb-6 text-gray-800 dark:text-gray-200" {...props} />,
+                    ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-6" {...props} />,
+                    ol: ({ node, ...props }) => <ol className="list-decimal pl-6 mb-6" {...props} />,
+                    li: ({ node, ...props }) => <li className="mb-2" {...props} />,
+                    a: ({ node, ...props }) => <a className="text-blue hover:text-red transition-colors" {...props} />,
+                    strong: ({ node, ...props }) => <strong className="font-semibold" {...props} />,
+                    blockquote: ({ node, ...props }) => (
+                      <blockquote className="border-l-4 border-blue pl-6 my-8 italic text-xl font-serif text-charcoal dark:text-white" {...props} />
+                    ),
+                    code: ({ node, ...props }) => (
+                      <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm" {...props} />
+                    ),
+                    pre: ({ node, ...props }) => (
+                      <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded overflow-x-auto mb-6" {...props} />
+                    ),
+                  }}
+                >
+                  {article.fullText}
+                </ReactMarkdown>
                 
                 {article.pullQuote && (
                   <blockquote className="border-l-4 border-blue pl-6 my-8 italic text-xl font-serif text-charcoal dark:text-white">
