@@ -49,7 +49,7 @@ export default function Articles() {
                 Articles & Resources
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-400">
-                Medication Mistakes Are Common. These Articles & Resources Can Help You Avoid Them
+                Explore our collection of articles, research summaries, and patient stories about medication safety.
               </p>
             </div>
           </ScrollReveal>
