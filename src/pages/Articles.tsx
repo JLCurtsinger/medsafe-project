@@ -49,7 +49,7 @@ export default function Articles() {
                 Articles & Resources
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-400">
-                Medication Mistakes Are Common. These Articles & Resources Can Help You Avoid Them
+                Every year, millions are harmed by preventable drug errors. These resources can help you protect yourself and your loved ones.
               </p>
             </div>
           </ScrollReveal>
