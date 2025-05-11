@@ -17,22 +17,34 @@ import Podcasts from "./pages/Podcasts";
 import About from "./pages/About";
 import Tools from "./pages/Tools";
 import { NotFound } from "./pages/NotFound";
+import { useEffect } from 'react';
 
 const queryClient = new QueryClient();
-const GA_MEASUREMENT_ID = "G-XXXXXXXXXX"; // Replace with actual GA ID when available
+const GA_MEASUREMENT_ID = "G-E949V1HZHT";
 
 const App: React.FC = () => {
-  useEffect(() => {
-    // Add Google AdSense script (commented out until needed)
-    // const script = document.createElement("script");
-    // script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX";
-    // script.async = true;
-    // script.crossOrigin = "anonymous";
-    // document.head.appendChild(script);
-    // return () => {
-    //   document.head.removeChild(script);
-    // };
-  }, []);
+useEffect(() => {
+  // Load Google Analytics
+  const script1 = document.createElement('script');
+  script1.async = true;
+  script1.src = 'https://www.googletagmanager.com/gtag/js?id=G-E949V1HZHT';
+  document.head.appendChild(script1);
+
+  const script2 = document.createElement('script');
+  script2.innerHTML = `
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-E949V1HZHT');
+  `;
+  document.head.appendChild(script2);
+
+  // Optional: Cleanup on unmount
+  return () => {
+    document.head.removeChild(script1);
+    document.head.removeChild(script2);
+  };
+}, []);
 
   return (
     <QueryClientProvider client={queryClient}>
