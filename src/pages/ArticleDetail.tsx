@@ -1,15 +1,14 @@
 
 import { useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { ScrollReveal } from "@/components/ScrollReveal";
-import { CalendarIcon, Clock, Share2, ChevronLeft, Facebook, Twitter } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useParams } from "react-router-dom";
 import { articles } from "@/data/articles";
 import { NotFound } from "./NotFound";
-import { shareContent } from "@/utils/shareUtils";
-import { Helmet } from "react-helmet-async";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { ArticleHeader } from "@/components/article/ArticleHeader";
+import { ArticleImage } from "@/components/article/ArticleImage";
+import { ArticleContent } from "@/components/article/ArticleContent";
+import { ShareSection } from "@/components/article/ShareSection";
+import { RelatedArticles } from "@/components/article/RelatedArticles";
+import { ArticleMeta } from "@/components/article/ArticleMeta";
 
 export default function ArticleDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -64,170 +63,36 @@ export default function ArticleDetail() {
 
   return (
     <>
-      <Helmet>
-        <title>{article.title} | MedSafe Project</title>
-        <meta name="description" content={metaDescription} />
-        <link rel="canonical" href={articleUrl} />
-        
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="article" />
-        <meta property="og:url" content={articleUrl} />
-        <meta property="og:title" content={article.title} />
-        <meta property="og:description" content={metaDescription} />
-        <meta property="og:image" content={article.image} />
-        <meta property="article:published_time" content={article.date} />
-        <meta property="article:section" content={article.category} />
-        
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content={articleUrl} />
-        <meta name="twitter:title" content={article.title} />
-        <meta name="twitter:description" content={metaDescription} />
-        <meta name="twitter:image" content={article.image} />
-        
-        {/* Schema.org structured data */}
-        <script type="application/ld+json">
-          {JSON.stringify(articleSchema)}
-        </script>
-      </Helmet>
+      <ArticleMeta 
+        title={article.title}
+        description={metaDescription}
+        articleUrl={articleUrl}
+        image={article.image}
+        date={article.date}
+        category={article.category}
+        schema={articleSchema}
+      />
       
       <div className="pt-24 pb-20 min-h-screen">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto">
+            <ArticleHeader 
+              title={article.title}
+              date={article.date}
+              readingTime={article.readingTime}
+              category={article.category}
+            />
             
-            <ScrollReveal>
-              <Link to="/articles" className="inline-flex items-center text-blue hover:text-red mb-6 transition-colors">
-                <ChevronLeft className="h-4 w-4 mr-1" />
-                <span>Back to Articles</span>
-              </Link>
-              
-              <div className="mb-6">
-                <span className="tag mb-4">{article.category}</span>
-                <h1 className="text-3xl md:text-4xl font-serif font-semibold mb-4 text-charcoal dark:text-white">
-                  {article.title}
-                </h1>
-                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-8">
-                  <div className="flex items-center mr-6">
-                    <CalendarIcon className="h-4 w-4 mr-1" />
-                    <span>{article.date}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-1" />
-                    <span>{article.readingTime}</span>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
+            <ArticleImage src={article.image} alt={article.title} />
             
-            <ScrollReveal>
-              <div className="rounded-lg overflow-hidden mb-8">
-                <img
-                  src={article.image}
-                  alt={article.title}
-                  className="w-full h-auto object-cover"
-                />
-              </div>
-            </ScrollReveal>
+            <ArticleContent 
+              fullText={article.fullText}
+              pullQuote={article.pullQuote}
+            />
             
-            <ScrollReveal>
-              <div className="prose prose-lg dark:prose-invert max-w-none mb-12">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={{
-                    h1: ({node, ...props}) => <h1 className="text-3xl font-serif font-semibold mb-4 mt-8 text-charcoal dark:text-white" {...props} />,
-                    h2: ({node, ...props}) => <h2 className="text-2xl font-serif font-semibold mb-3 mt-6 text-charcoal dark:text-white" {...props} />,
-                    h3: ({node, ...props}) => <h3 className="text-xl font-serif font-semibold mb-3 mt-5 text-charcoal dark:text-white" {...props} />,
-                    p: ({node, ...props}) => <p className="mb-6 text-gray-800 dark:text-gray-200" {...props} />,
-                    ul: ({node, ...props}) => <ul className="list-disc pl-6 mb-6" {...props} />,
-                    ol: ({node, ...props}) => <ol className="list-decimal pl-6 mb-6" {...props} />,
-                    li: ({node, ...props}) => <li className="mb-2" {...props} />,
-                    a: ({node, ...props}) => <a className="text-blue hover:text-red transition-colors underline" {...props} />,
-                    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-blue pl-6 my-8 italic text-xl font-serif text-charcoal dark:text-white" {...props} />
-                  }}
-                >
-                  {article.fullText}
-                </ReactMarkdown>
-                
-                {article.pullQuote && (
-                  <blockquote className="border-l-4 border-blue pl-6 my-8 italic text-xl font-serif text-charcoal dark:text-white">
-                    {article.pullQuote}
-                  </blockquote>
-                )}
-                
-                <div className="flex items-center justify-between mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-                  <div>
-                    <h4 className="font-semibold text-lg mb-1">Share this article</h4>
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={() => shareContent("facebook", articleUrl, article.title)}
-                      >
-                        <Facebook className="h-4 w-4 mr-2" />
-                        Share
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => shareContent("twitter", articleUrl, article.title)}
-                      >
-                        <Twitter className="h-4 w-4 mr-2" />
-                        Tweet
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => shareContent("email", articleUrl, `Check out this article: ${article.title}`, 
-                          `I thought you might be interested in this article from MedSafe Project:\n\n${article.title}\n${articleUrl}`)}
-                      >
-                        <Share2 className="h-4 w-4 mr-2" />
-                        Email
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <Link to="/articles">
-                    <Button variant="default" className="bg-blue hover:bg-blue/90">
-                      Read More Articles
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </ScrollReveal>
+            <ShareSection articleUrl={articleUrl} title={article.title} />
             
-            
-            {relatedArticles.length > 0 && (
-              <ScrollReveal>
-                <div className="mt-16">
-                  <h3 className="text-2xl font-serif font-semibold mb-8 text-charcoal dark:text-white">
-                    Related Articles
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {relatedArticles.map((related) => (
-                      <Link
-                        key={related.id}
-                        to={`/article/${related.slug}`}
-                        className="group"
-                      >
-                        <div className="aspect-video overflow-hidden rounded-lg mb-3">
-                          <img
-                            src={related.image}
-                            alt={related.title}
-                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                          />
-                        </div>
-                        <h4 className="font-serif font-medium text-lg mb-1 group-hover:text-red transition-colors">
-                          {related.title}
-                        </h4>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {related.readingTime}
-                        </p>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </ScrollReveal>
-            )}
+            <RelatedArticles articles={relatedArticles} />
           </div>
         </div>
       </div>
