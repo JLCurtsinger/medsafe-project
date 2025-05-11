@@ -17,7 +17,6 @@ import Podcasts from "./pages/Podcasts";
 import About from "./pages/About";
 import Tools from "./pages/Tools";
 import { NotFound } from "./pages/NotFound";
-import { useEffect } from 'react';
 
 const queryClient = new QueryClient();
 const GA_MEASUREMENT_ID = "G-E949V1HZHT";
@@ -53,7 +52,6 @@ useEffect(() => {
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
             <div className="flex flex-col min-h-screen">
               <Header />
               <main className="flex-grow">
