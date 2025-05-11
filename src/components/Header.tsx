@@ -121,9 +121,9 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Enhanced with frosted glass effect and animations */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 bg-white dark:bg-charcoal z-40 pt-20">
+        <div className="md:hidden fixed inset-0 z-40 pt-20 bg-transparent">
           <Button 
             variant="ghost" 
             size="icon"
@@ -133,41 +133,56 @@ export function Header() {
           >
             <X className="h-6 w-6 text-charcoal dark:text-white" />
           </Button>
-          <nav className="flex flex-col items-center space-y-6 p-8">
+          
+          {/* Frosted glass navigation panel */}
+          <nav className="flex flex-col items-center space-y-6 p-8 mx-4 rounded-xl 
+            bg-white/90 dark:bg-charcoal/90 backdrop-blur-lg 
+            shadow-lg border border-white/20 dark:border-white/10
+            animate-fade-in">
             <Link
               to="/"
-              className="text-xl font-medium text-charcoal dark:text-white"
+              className="text-xl font-medium text-charcoal dark:text-white hover:text-red dark:hover:text-red 
+                transition-colors relative group focus:outline-none focus:ring-2 focus:ring-red/70 rounded-md px-2"
               onClick={handleLinkClick}
             >
               Home
+              <span className="absolute h-0.5 w-0 bg-red bottom-0 left-0 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               to="/articles"
-              className="text-xl font-medium text-charcoal dark:text-white"
+              className="text-xl font-medium text-charcoal dark:text-white hover:text-red dark:hover:text-red 
+                transition-colors relative group focus:outline-none focus:ring-2 focus:ring-red/70 rounded-md px-2"
               onClick={handleLinkClick}
             >
               Articles
+              <span className="absolute h-0.5 w-0 bg-red bottom-0 left-0 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               to="/podcasts"
-              className="text-xl font-medium text-charcoal dark:text-white"
+              className="text-xl font-medium text-charcoal dark:text-white hover:text-red dark:hover:text-red 
+                transition-colors relative group focus:outline-none focus:ring-2 focus:ring-red/70 rounded-md px-2"
               onClick={handleLinkClick}
             >
               Podcasts
+              <span className="absolute h-0.5 w-0 bg-red bottom-0 left-0 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               to="/tools"
-              className="text-xl font-medium text-charcoal dark:text-white"
+              className="text-xl font-medium text-charcoal dark:text-white hover:text-red dark:hover:text-red 
+                transition-colors relative group focus:outline-none focus:ring-2 focus:ring-red/70 rounded-md px-2"
               onClick={handleLinkClick}
             >
               Tools
+              <span className="absolute h-0.5 w-0 bg-red bottom-0 left-0 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               to="/about"
-              className="text-xl font-medium text-charcoal dark:text-white"
+              className="text-xl font-medium text-charcoal dark:text-white hover:text-red dark:hover:text-red 
+                transition-colors relative group focus:outline-none focus:ring-2 focus:ring-red/70 rounded-md px-2"
               onClick={handleLinkClick}
             >
               About
+              <span className="absolute h-0.5 w-0 bg-red bottom-0 left-0 transition-all duration-300 group-hover:w-full"></span>
             </Link>
           </nav>
         </div>
