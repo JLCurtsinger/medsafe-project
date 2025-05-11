@@ -119,59 +119,6 @@
   .article-card {
     @apply bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 dark:bg-charcoal/30 dark:border dark:border-white/10;
   }
-  
-  /* Enhanced styles for article markdown content */
-  .prose h1, .prose h2, .prose h3, .prose h4 {
-    @apply font-serif font-semibold text-charcoal dark:text-white;
-  }
-  
-  .prose h1 {
-    @apply text-3xl mt-8 mb-6;
-  }
-  
-  .prose h2 {
-    @apply text-2xl mt-8 mb-4;
-  }
-  
-  .prose h3 {
-    @apply text-xl mt-6 mb-3;
-  }
-  
-  .prose p {
-    @apply mb-6 text-gray-800 dark:text-gray-200;
-  }
-  
-  .prose a {
-    @apply text-blue hover:text-red transition-colors no-underline;
-  }
-  
-  .prose ul {
-    @apply list-disc pl-6 mb-6;
-  }
-  
-  .prose ol {
-    @apply list-decimal pl-6 mb-6;
-  }
-  
-  .prose li {
-    @apply mb-2;
-  }
-  
-  .prose blockquote {
-    @apply border-l-4 border-blue pl-6 my-8 italic text-xl font-serif text-charcoal dark:text-white;
-  }
-  
-  .prose code {
-    @apply bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm;
-  }
-  
-  .prose pre {
-    @apply bg-gray-100 dark:bg-gray-800 p-4 rounded overflow-x-auto mb-6;
-  }
-  
-  .prose strong {
-    @apply font-semibold;
-  }
 }
 
 @keyframes fadeIn {
