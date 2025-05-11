@@ -66,6 +66,11 @@ export function Footer() {
                   About
                 </Link>
               </li>
+              <li>
+                <Link to="/privacy-policy" className="text-gray-600 dark:text-gray-400 hover:text-red dark:hover:text-red transition-colors" onClick={handleLinkClick}>
+                  Privacy Policy
+                </Link>
+              </li>
             </ul>
           </div>
           

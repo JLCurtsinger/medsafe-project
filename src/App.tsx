@@ -16,6 +16,7 @@ import ArticleDetail from "./pages/ArticleDetail";
 import Podcasts from "./pages/Podcasts";
 import About from "./pages/About";
 import Tools from "./pages/Tools";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { NotFound } from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -70,6 +71,7 @@ useEffect(() => {
                   <Route path="/podcasts" element={<Podcasts />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/tools" element={<Tools />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </main>
