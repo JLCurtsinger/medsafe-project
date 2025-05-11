@@ -23,25 +23,33 @@ const GA_MEASUREMENT_ID = "G-E949V1HZHT";
 
 const App: React.FC = () => {
 useEffect(() => {
-  // Load Google Analytics
-  const script1 = document.createElement('script');
-  script1.async = true;
-  script1.src = 'https://www.googletagmanager.com/gtag/js?id=G-E949V1HZHT';
-  document.head.appendChild(script1);
+  // Google Analytics
+  const gaScript1 = document.createElement('script');
+  gaScript1.async = true;
+  gaScript1.src = 'https://www.googletagmanager.com/gtag/js?id=G-E949V1HZHT';
+  document.head.appendChild(gaScript1);
 
-  const script2 = document.createElement('script');
-  script2.innerHTML = `
+  const gaScript2 = document.createElement('script');
+  gaScript2.innerHTML = `
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-E949V1HZHT');
   `;
-  document.head.appendChild(script2);
+  document.head.appendChild(gaScript2);
 
-  // Optional: Cleanup on unmount
+  // Google AdSense
+  const adsenseScript = document.createElement('script');
+  adsenseScript.async = true;
+  adsenseScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7469694080179788';
+  adsenseScript.crossOrigin = 'anonymous';
+  document.head.appendChild(adsenseScript);
+
+  // Cleanup on unmount
   return () => {
-    document.head.removeChild(script1);
-    document.head.removeChild(script2);
+    document.head.removeChild(gaScript1);
+    document.head.removeChild(gaScript2);
+    document.head.removeChild(adsenseScript);
   };
 }, []);
 
