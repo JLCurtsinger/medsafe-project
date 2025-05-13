@@ -18,7 +18,7 @@ export const SEO: React.FC<SEOProps> = ({
   description,
   canonicalUrl,
   ogType = 'website',
-  ogImage = 'https://lovable.dev/opengraph-image-p98pqg.png',
+  ogImage = 'https://www.medsafeproject.org/og-image.png', // Updated default image
   ogImageAlt = 'MedSafe Project logo',
   keywords = [],
   schemaData,
