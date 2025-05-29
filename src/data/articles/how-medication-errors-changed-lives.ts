@@ -7,7 +7,7 @@ export default {
   date: "April 18, 2025",
   readingTime: "12 min read",
   category: "Patient Stories",
-  image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?q=80&w=3000&auto=format&fit=crop",
+  image: "/images/how-medication-errors-changed-lives.webp",
   fullText: `Every year, medication errors harm over 1.3 million Americans. Behind these statistics are real people whose lives changed forever because of preventable mistakes. These three powerful stories reveal how medication errors happen—and more importantly, how you can protect yourself and your loved ones.
 
 ## When Doctors Don't Talk: Sarah's Near-Fatal Combination
