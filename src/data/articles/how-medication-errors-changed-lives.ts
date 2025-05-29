@@ -8,9 +8,7 @@ export default {
   readingTime: "12 min read",
   category: "Patient Stories",
   image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?q=80&w=3000&auto=format&fit=crop",
-  fullText: `# When Medications Turn Dangerous: Three Real Stories That Could Save Your Life
-
-Every year, medication errors harm over 1.3 million Americans. Behind these statistics are real people whose lives changed forever because of preventable mistakes. These three powerful stories reveal how medication errors happen—and more importantly, how you can protect yourself and your loved ones.
+  fullText: `Every year, medication errors harm over 1.3 million Americans. Behind these statistics are real people whose lives changed forever because of preventable mistakes. These three powerful stories reveal how medication errors happen—and more importantly, how you can protect yourself and your loved ones.
 
 ## Sarah's Near-Fatal Combination: When Doctors Don't Talk
 
