@@ -4,11 +4,9 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { BookOpen, Info, AlertTriangle, ShieldCheck, Pill, PlusCircle, CircleDot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { scrollToTop } from "@/utils/scrollUtils";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect, useState } from "react";
 
 export const HeroSection = () => {
-  const isMobile = useIsMobile();
   const [scrollY, setScrollY] = useState(0);
   
   // Add subtle parallax effect based on scroll
@@ -58,19 +56,8 @@ export const HeroSection = () => {
               Substance Interaction Awareness
             </span>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-charcoal dark:text-white leading-tight animate-hero-fade-in">
-              {isMobile ? (
-                <>
-                  <div>One Mistake.</div>
-                  <div>One Pill.</div>
-                  <div className="text-blue dark:text-blue-100">One Life</div>
-                  <div className="text-blue dark:text-blue-100">Changed Forever.</div>
-                </>
-              ) : (
-                <>
-                  One Mistake. One Pill. 
-                  <span className="text-blue dark:text-blue-100"> One Life Changed Forever.</span>
-                </>
-              )}
+              One Mistake. One Pill. 
+              <span className="text-blue dark:text-blue-100"> One Life Changed Forever.</span>
             </h1>
             <p className="text-lg md:text-xl max-w-xl mb-8 text-gray-600 dark:text-gray-300 leading-relaxed">
               Millions are <span className="font-bold text-blue">harmed</span> each year by <span className="font-bold text-blue">preventable</span> drug interactions. <span className="font-bold text-blue">It's time for change.</span>
@@ -98,8 +85,8 @@ export const HeroSection = () => {
               {/* Add subtle glow effect behind the image */}
               <div className="absolute -top-5 -left-5 w-full h-full bg-blue/10 rounded-2xl dark:bg-blue/5 animate-pulse" style={{ animationDuration: '3s' }}></div>
               <img 
-                src="/lovable-uploads/15fc01fb-7936-49ac-a0ee-ddea34c0d484.png" 
-                alt="Close-up of hands holding colorful pills and capsules" 
+                src="/lovable-uploads/wideOpenHands.webp" 
+                alt="Close-up of hands holding pills in open hands" 
                 className="w-full max-w-md rounded-2xl shadow-lg object-cover relative z-10 animate-fade-in"
               />
               <div className="absolute -bottom-4 right-4 bg-white dark:bg-charcoal/70 shadow-lg rounded-lg p-3 animate-fade-in">
@@ -122,10 +109,10 @@ export const HeroSection = () => {
           <div className="relative max-w-sm mx-auto">
             {/* Add subtle glow effect behind the image */}
             <div className="absolute -top-3 -left-3 w-full h-full bg-blue/10 rounded-2xl dark:bg-blue/5 animate-pulse" style={{ animationDuration: '3s' }}></div>
-            <img 
-              src={isMobile ? "/lovable-uploads/openHands.webp" : "/lovable-uploads/wideOpenHands.webp"} 
-              alt={isMobile ? "Close-up of hands holding green capsules." : "Close-up of hands holding colorful pills and capsules"}
-              className="w-full rounded-2xl shadow-lg object-cover relative z-10 max-h-[300px] sm:max-h-[400px] md:max-h-[250px] lg:max-h-none"
+            <img
+              src="/lovable-uploads/openHands.webp"
+              alt="Close-up of hands holding green capsules"
+              className="w-full rounded-2xl shadow-lg object-cover relative z-10 max-h-[300px] sm:max-h-[400px]"
             />
             {/* Add subtle floating element near the mobile image */}
             <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-blue/20 dark:bg-blue/30 animate-pulse"
