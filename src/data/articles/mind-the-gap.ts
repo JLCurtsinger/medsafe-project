@@ -6,7 +6,7 @@ export default {
   date: "May 28, 2025",
   readingTime: "7 min read",
   category: "Prevention",
-  image: "https://unsplash.com/photos/vaccine-vial-surrounded-by-syringes-ready-for-injection-x0lxYxhcwK0?q=80&w=3000&auto=format&fit=crop",
+  image: "/images/mind-the-gap.webp",
   fullText: `Mind the Gap: How a Few Hours Can Cut Your Risk of Harmful Med Mix-Ups
 
 Every day, millions of people juggle multiple prescriptions and supplements—sometimes without realizing that two agents peaking in your bloodstream at the same time can increase the chance of an unwanted interaction. While most safety guides focus on what you take, one critical factor often flies under the radar: when you take it. By simply introducing a few hours’ gap between doses—or syncing some pills with meals—you can dramatically reduce the window during which two substances overlap in your system.
