@@ -1,6 +1,6 @@
 export default {
   id: 7,
-  title: "Mind the Gap: How a Few Hours Can Cut Your Risk of Harmful Med Mix-Ups",
+  title: "Mind the Gap: Can Timing Your Medications Prevent Drug Interactions?",
   slug: "mind-the-gap",
   excerpt: "Timing when you take medications and supplements can reduce overlap and lower the risk of harmful interactions.",
   date: "May 28, 2025",
