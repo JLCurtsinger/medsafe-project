@@ -1,4 +1,3 @@
-
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { SEO } from "@/components/SEO";
 import { 
@@ -78,6 +77,10 @@ export default function Podcasts() {
                           <Podcast 
                             src="https://open.spotify.com/embed/episode/3I9F8OeObx111FEQorzUdS?utm_source=generator&theme=0&t=0"
                             title="Episode 4: Beyond the Warning Label: The Truth About Drug Interactions"
+                          />
+                          <Podcast
+                            src="https://open.spotify.com/embed/episode/4lQyswgGKVk2me87xPrTsK?utm_source=generator&theme=0&t=0"
+                            title="Episode 5: Mind the Gap: How a Few Hours Can Cut Your Risk of Harmful Med Mix-Ups"
                           />
                         </div>
                       </AccordionContent>
