@@ -10,9 +10,9 @@ export default {
   image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?q=80&w=3000&auto=format&fit=crop",
   fullText: `Every year, medication errors harm over 1.3 million Americans. Behind these statistics are real people whose lives changed forever because of preventable mistakes. These three powerful stories reveal how medication errors happen—and more importantly, how you can protect yourself and your loved ones.
 
-## Sarah's Near-Fatal Combination: When Doctors Don't Talk
+## When Doctors Don't Talk: Sarah's Near-Fatal Combination
 
-*The mistake that almost killed a 42-year-old mother*
+*The mistake that almost caused a 42-year-old mother to lose it all*
 
 Sarah Jensen thought she was doing everything right. When anxiety began affecting her daily life, she saw her family doctor and started taking an SSRI antidepressant. The medication helped, and life returned to normal—until the migraines started.
 
