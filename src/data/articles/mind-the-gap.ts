@@ -2,7 +2,7 @@ export default {
   id: 7,
   title: "Mind the Gap: Can Timing Your Medications Prevent Drug Interactions?",
   slug: "mind-the-gap",
-  excerpt: "Timing when you take medications and supplements can reduce overlap and lower the risk of harmful interactions.",
+  excerpt: "Can timing your meds really prevent drug interactions? How simple timing methods (like a 4–6-hour gap or meal timing) reduce overlap risk.",
   date: "May 28, 2025",
   readingTime: "7 min read",
   category: "Prevention",
