@@ -7,9 +7,7 @@ export default {
   readingTime: "7 min read",
   category: "Prevention",
   image: "/images/elderly-medication.webp",
-  fullText: `# Medication Safety for Seniors: Why Your Pills Could Be More Dangerous Than You Think
-
-If you're over 65, the medications keeping you healthy might also be putting you at risk. While prescription drugs can be life-saving, they pose unique dangers for older adults that most people—including some doctors—don't fully understand.
+  fullText: `If you're over 65, the medications keeping you healthy might also be putting you at risk. While prescription drugs can be life-saving, they pose unique dangers for older adults that most people—including some doctors—don't fully understand.
 
 The statistics are sobering: seniors are twice as likely to visit the emergency room due to medication problems, and adverse drug reactions send over 125,000 older Americans to the hospital each year. But here's what many don't realize—most of these incidents are completely preventable.
 
