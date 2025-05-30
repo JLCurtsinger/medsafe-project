@@ -7,7 +7,7 @@ export default {
   date: "March 10, 2025",
   readingTime: "7 min read",
   category: "Prevention",
-  image: "https://images.unsplash.com/photo-1556911261-6bd341186b2f?q=80&w=3000&auto=format&fit=crop",
+  image: "/images/elderly-medication.webp",
   fullText: `Older adults face unique medication safety challenges due to age-related physiological changes, multiple health conditions, and complex medication regimens. Understanding these special concerns is essential for preventing adverse drug events in this vulnerable population.
 
 Age-Related Physiological Changes
