@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { SEO } from '@/components/SEO';
 
@@ -8,9 +7,15 @@ const Blog: React.FC = () => {
       <SEO
         title="Blog | MedSafe Project"
         description="Stay updated with the latest insights, research, and developments in medication safety from the MedSafe Project team."
-        keywords={['medication safety blog', 'drug interaction news', 'patient safety updates', 'healthcare blog', 'medication safety research']}
+        keywords={[
+          'medication safety blog',
+          'drug interaction news',
+          'patient safety updates',
+          'healthcare blog',
+          'medication safety research',
+        ]}
       />
-      
+
       <div className="min-h-screen bg-white dark:bg-charcoal">
         <div className="container-custom py-16">
           <div className="max-w-4xl mx-auto">
@@ -22,8 +27,16 @@ const Blog: React.FC = () => {
                 Stay updated with the latest insights, research, and developments in medication safety.
               </p>
             </div>
-            
-            <div id="autoauthor-blog-embed"></div>
+
+            {/* AutoAuthor Embed */}
+            <div className="w-full">
+              <iframe
+                src="/embed/view.html?brand=MedSafe%20Project"
+                style={{ border: 'none', width: '100%', height: '400px' }}
+                loading="lazy"
+                title="MedSafe Blog Embed"
+              ></iframe>
+            </div>
           </div>
         </div>
       </div>
