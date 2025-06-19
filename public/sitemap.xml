@@ -25,6 +25,12 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://medsafeproject.org/blog</loc>
+    <lastmod>2025-06-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <!-- Article URLs would be dynamically added here in a real implementation -->
   <url>
     <loc>https://medsafeproject.org/article/medication-concerns-older-adults</loc>

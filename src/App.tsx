@@ -16,6 +16,7 @@ import ArticleDetail from "./pages/ArticleDetail";
 import Podcasts from "./pages/Podcasts";
 import About from "./pages/About";
 import Tools from "./pages/Tools";
+import Blog from "./pages/Blog";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import { NotFound } from "./pages/NotFound";
@@ -72,6 +73,7 @@ useEffect(() => {
                   <Route path="/podcasts" element={<Podcasts />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/tools" element={<Tools />} />
+                  <Route path="/blog" element={<Blog />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="/terms-of-service" element={<TermsOfService />} />
                   <Route path="*" element={<NotFound />} />

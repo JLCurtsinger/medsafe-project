@@ -62,6 +62,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link to="/blog" className="text-gray-600 dark:text-gray-400 hover:text-red dark:hover:text-red transition-colors" onClick={handleLinkClick}>
+                  Blog
+                </Link>
+              </li>
+              <li>
                 <Link to="/about" className="text-gray-600 dark:text-gray-400 hover:text-red dark:hover:text-red transition-colors" onClick={handleLinkClick}>
                   About
                 </Link>
