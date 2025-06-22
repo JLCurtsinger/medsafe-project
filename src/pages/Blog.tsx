@@ -30,12 +30,10 @@ const Blog: React.FC = () => {
 
             {/* AutoAuthor Embed */}
             <iframe
-              src="https://autoauthor.cc/embed/view.html?brand=AutoAuthor&theme=dark&glow=%23f5502f&layout=compact"
-              style="border:none;width:100%;max-width:100%;height:400px;overflow:auto;display:block;border-radius:8px;"
-              loading="lazy"
-              sandbox="allow-scripts allow-same-origin"
-              referrerpolicy="no-referrer"
-            ></iframe>
+                src="/embed/view.html?brand=MedSafe%20Project&theme=minimal&glow=%239333ea&layout=compact"
+                style="border:none;width:100%;height:400px;border-radius:8px;"
+                loading="lazy"
+              ></iframe>
           </div>
         </div>
       </div>
