@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { SEO } from '@/components/SEO';
 
@@ -16,14 +17,14 @@ const Blog: React.FC = () => {
         ]}
       />
 
-      <div className="min-h-screen bg-white dark:bg-charcoal">
+      <div className="min-h-screen bg-black">
         <div className="container-custom py-16">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <h1 className="text-4xl md:text-5xl font-serif font-bold text-charcoal dark:text-white mb-4">
+              <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">
                 Blog
               </h1>
-              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              <p className="text-lg text-gray-400 max-w-2xl mx-auto">
                 Stay updated with the latest insights, research, and developments in medication safety.
               </p>
             </div>
