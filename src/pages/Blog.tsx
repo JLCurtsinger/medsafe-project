@@ -29,11 +29,7 @@ const Blog: React.FC = () => {
             </div>
 
             {/* AutoAuthor Embed */}
-            <iframe
-                src="/embed/view.html?brand=MedSafe%20Project&theme=minimal&glow=%239333ea&layout=compact"
-                style="border:none;width:100%;height:400px;border-radius:8px;"
-                loading="lazy"
-              ></iframe>
+
           </div>
         </div>
       </div>
