@@ -76,12 +76,18 @@ export function SignalsVsExposureChart({ className = '' }: SignalsVsExposureChar
 
         if (!response.ok) {
           let errorDetails = '';
+          let errorData: any = null;
           try {
-            const errorData = await response.json();
+            errorData = await response.json();
             if (errorData.details) {
               errorDetails = `: ${errorData.details}`;
             } else if (errorData.message) {
               errorDetails = `: ${errorData.message}`;
+            }
+            // Include debug info if available (for development)
+            if (errorData.debug && import.meta.env.DEV) {
+              const debugStr = JSON.stringify(errorData.debug, null, 2);
+              errorDetails += `\n\nDebug info:\n${debugStr}`;
             }
           } catch {
             errorDetails = `: ${response.statusText}`;
@@ -104,9 +110,14 @@ export function SignalsVsExposureChart({ className = '' }: SignalsVsExposureChar
         if (cancelled) return;
 
         if (result.error) {
-          const errorMsg = result.details
+          let errorMsg = result.details
             ? `${result.error}: ${result.details}`
             : (result.message || result.error);
+          // Include debug info if available (for development)
+          if (result.debug && import.meta.env.DEV) {
+            const debugStr = JSON.stringify(result.debug, null, 2);
+            errorMsg += `\n\nDebug info:\n${debugStr}`;
+          }
           throw new Error(errorMsg);
         }
 
@@ -150,10 +161,16 @@ export function SignalsVsExposureChart({ className = '' }: SignalsVsExposureChar
 
         if (!response.ok) {
           let errorDetails = '';
+          let errorData: any = null;
           try {
-            const errorData = await response.json();
+            errorData = await response.json();
             if (errorData.details) {
               errorDetails = `: ${errorData.details}`;
+            }
+            // Include debug info if available (for development)
+            if (errorData.debug && import.meta.env.DEV) {
+              const debugStr = JSON.stringify(errorData.debug, null, 2);
+              errorDetails += `\n\nDebug info:\n${debugStr}`;
             }
           } catch {
             errorDetails = `: ${response.statusText}`;
