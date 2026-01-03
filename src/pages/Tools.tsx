@@ -5,7 +5,7 @@ import { SEO } from "@/components/SEO";
 export default function Tools() {
   const tools = [
     {
-      name: "Vitacheck.net",
+      name: "Vitacheck.cc",
       description: "A modern, user-friendly drug interaction checker with a comprehensive database and easy-to-understand results. The new gold standard of drug interaction checking.",
       features: [
         "Check interactions between multiple medications",
@@ -14,7 +14,7 @@ export default function Tools() {
         "Free basic version with premium features available"
       ],
       rating: 5,
-      url: "https://vitacheck.net/",
+      url: "https://vitacheck.cc/",
       recommended: true
     },
     {

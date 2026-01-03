@@ -94,6 +94,13 @@ export function Header() {
             Tools
           </Link>
           <Link 
+            to="/data" 
+            className={`font-medium ${isScrolled ? "text-charcoal/80 dark:text-white/80" : "text-charcoal/80 dark:text-white/80"} hover:text-red transition-colors`}
+            onClick={handleLinkClick}
+          >
+            Data
+          </Link>
+          <Link 
             to="/about" 
             className={`font-medium ${isScrolled ? "text-charcoal/80 dark:text-white/80" : "text-charcoal/80 dark:text-white/80"} hover:text-red transition-colors`}
             onClick={handleLinkClick}
@@ -173,6 +180,15 @@ export function Header() {
               onClick={handleLinkClick}
             >
               Tools
+              <span className="absolute h-0.5 w-0 bg-red bottom-0 left-0 transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+            <Link
+              to="/data"
+              className="text-xl font-medium text-charcoal dark:text-white hover:text-red dark:hover:text-red 
+                transition-colors relative group focus:outline-none focus:ring-2 focus:ring-red/70 rounded-md px-2"
+              onClick={handleLinkClick}
+            >
+              Data
               <span className="absolute h-0.5 w-0 bg-red bottom-0 left-0 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
