@@ -216,6 +216,9 @@ export function SignalsVsExposureChart({ className = '' }: SignalsVsExposureChar
     const item = data.items[0];
     const exposureTypeLabel = data.exposureType === 'beneficiaries' ? 'per 100k beneficiaries' : 'per 100k claims';
     const rateLabel = `Rate ${exposureTypeLabel}`;
+    
+    // Calculate xAxis max based on value (add 20% padding, minimum 1)
+    const xAxisMax = Math.max(1, item.ratePer100k * 1.2);
 
     return {
       backgroundColor: 'transparent',
@@ -254,6 +257,7 @@ export function SignalsVsExposureChart({ className = '' }: SignalsVsExposureChar
         name: rateLabel,
         nameLocation: 'middle',
         nameGap: 30,
+        max: xAxisMax,
         nameTextStyle: {
           color: '#666',
           fontSize: 12,

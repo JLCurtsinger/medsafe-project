@@ -33,6 +33,7 @@ interface DebugInfo {
   cmsDatasetMeta?: unknown;
   chosenNameField?: string;
   chosenExposureField?: string;
+  chosenYear?: number;
   exposureType?: 'beneficiaries' | 'claims';
   derivedTopListPreview?: TopDrugItem[];
   faersRequestUrl?: string;
@@ -44,6 +45,8 @@ interface DebugInfo {
     cms?: boolean;
     faers?: boolean;
   };
+  selectedDrug?: string;
+  itemPreview?: SignalExposureItem;
 }
 
 interface CacheEntry {
@@ -84,103 +87,100 @@ function sanitizeSampleRow(row: Record<string, unknown>): Record<string, unknown
   return sanitized;
 }
 
-function scoreNameField(fieldName: string): number {
-  const lower = fieldName.toLowerCase();
-  let score = 0;
-  
-  // Exact matches score highest
-  if (lower === 'generic_name' || lower === 'drug_name') {
-    score += 100;
+function chooseNameField(columns: string[]): string | null {
+  // Prefer Gnrc_Name (generic name)
+  if (columns.includes('Gnrc_Name')) {
+    return 'Gnrc_Name';
   }
-  
-  // Contains both "generic" and "name"
-  if (lower.includes('generic') && lower.includes('name')) {
-    score += 50;
+  // Fallback to Brnd_Name (brand name)
+  if (columns.includes('Brnd_Name')) {
+    return 'Brnd_Name';
   }
-  
-  // Contains "drug" and "name"
-  if (lower.includes('drug') && lower.includes('name')) {
-    score += 40;
+  // Try other variations
+  const lower = columns.map(c => c.toLowerCase());
+  if (lower.includes('generic_name')) {
+    return columns[lower.indexOf('generic_name')];
   }
-  
-  // Contains "generic" or "drug"
-  if (lower.includes('generic')) {
-    score += 20;
+  if (lower.includes('drug_name')) {
+    return columns[lower.indexOf('drug_name')];
   }
-  if (lower.includes('drug')) {
-    score += 15;
-  }
-  
-  // Contains "name"
-  if (lower.includes('name')) {
-    score += 10;
-  }
-  
-  return score;
-}
-
-function scoreExposureField(fieldName: string): { score: number; type: 'beneficiaries' | 'claims' } {
-  const lower = fieldName.toLowerCase();
-  let score = 0;
-  let type: 'beneficiaries' | 'claims' = 'claims';
-  
-  // Beneficiaries fields score higher
-  if (lower.includes('bene') || lower.includes('beneficiar')) {
-    score += 100;
-    type = 'beneficiaries';
-  }
-  
-  // Claim fields
-  if (lower.includes('claim')) {
-    score += 50;
-    if (type !== 'beneficiaries') {
-      type = 'claims';
+  // Last resort: any field with "name" in it
+  for (const col of columns) {
+    if (col.toLowerCase().includes('name')) {
+      return col;
     }
   }
-  
-  // Count indicators
-  if (lower.includes('count') || lower.includes('cnt')) {
-    score += 20;
-  }
-  
-  // Total indicators
-  if (lower.includes('total') || lower.includes('tot')) {
-    score += 10;
-  }
-  
-  return { score, type };
+  return null;
 }
 
-function chooseFields(columns: string[]): { nameField: string | null; exposureField: string | null; exposureType: 'beneficiaries' | 'claims' } {
-  let bestNameField: { field: string; score: number } | null = null;
-  let bestExposureField: { field: string; score: number; type: 'beneficiaries' | 'claims' } | null = null;
+function chooseExposureField(columns: string[]): { field: string | null; year: number | null; type: 'beneficiaries' | 'claims' } {
+  // Look for Tot_Benes_YYYY pattern (beneficiaries)
+  const benePattern = /^Tot_Benes_(\d{4})$/;
+  const beneFields: Array<{ field: string; year: number }> = [];
   
   for (const col of columns) {
-    const nameScore = scoreNameField(col);
-    if (!bestNameField || nameScore > bestNameField.score) {
-      bestNameField = { field: col, score: nameScore };
-    }
-    
-    const exposureResult = scoreExposureField(col);
-    if (!bestExposureField || exposureResult.score > bestExposureField.score) {
-      bestExposureField = { field: col, score: exposureResult.score, type: exposureResult.type };
+    const match = col.match(benePattern);
+    if (match) {
+      const year = parseInt(match[1], 10);
+      beneFields.push({ field: col, year });
     }
   }
   
-  return {
-    nameField: bestNameField?.score > 0 ? bestNameField.field : null,
-    exposureField: bestExposureField?.score > 0 ? bestExposureField.field : null,
-    exposureType: bestExposureField?.type || 'claims',
-  };
+  if (beneFields.length > 0) {
+    // Sort by year descending and pick latest
+    beneFields.sort((a, b) => b.year - a.year);
+    return { field: beneFields[0].field, year: beneFields[0].year, type: 'beneficiaries' };
+  }
+  
+  // Fallback to Tot_Clms_YYYY pattern (claims)
+  const clmsPattern = /^Tot_Clms_(\d{4})$/;
+  const clmsFields: Array<{ field: string; year: number }> = [];
+  
+  for (const col of columns) {
+    const match = col.match(clmsPattern);
+    if (match) {
+      const year = parseInt(match[1], 10);
+      clmsFields.push({ field: col, year });
+    }
+  }
+  
+  if (clmsFields.length > 0) {
+    // Sort by year descending and pick latest
+    clmsFields.sort((a, b) => b.year - a.year);
+    return { field: clmsFields[0].field, year: clmsFields[0].year, type: 'claims' };
+  }
+  
+  // Last resort: try generic patterns
+  const lower = columns.map(c => c.toLowerCase());
+  for (const col of columns) {
+    const lowerCol = col.toLowerCase();
+    if (lowerCol.includes('bene') || lowerCol.includes('beneficiar')) {
+      return { field: col, year: null, type: 'beneficiaries' };
+    }
+  }
+  for (const col of columns) {
+    const lowerCol = col.toLowerCase();
+    if (lowerCol.includes('claim') || lowerCol.includes('clm')) {
+      return { field: col, year: null, type: 'claims' };
+    }
+  }
+  
+  return { field: null, year: null, type: 'claims' };
 }
 
-function buildFaersUrl(drugName: string, startDate: string, endDate: string, useExact: boolean = false): string {
+function cleanDrugNameForFaers(drugName: string): string {
+  // Remove trailing "*" and trim whitespace
+  return drugName.replace(/\*+$/, '').trim();
+}
+
+function buildFaersUrl(drugName: string, startDate: string, endDate: string, useExact: boolean = true): string {
+  // Clean drug name for FAERS query
+  const cleanName = cleanDrugNameForFaers(drugName);
   const searchQuery = useExact
-    ? `receivedate:[${startDate}+TO+${endDate}]+AND+patient.drug.medicinalproduct.exact:"${drugName}"`
-    : `receivedate:[${startDate}+TO+${endDate}]+AND+patient.drug.medicinalproduct:"${drugName}"`;
+    ? `receivedate:[${startDate}+TO+${endDate}]+AND+patient.drug.medicinalproduct.exact:"${cleanName}"`
+    : `receivedate:[${startDate}+TO+${endDate}]+AND+patient.drug.medicinalproduct:"${cleanName}"`;
   const params = new URLSearchParams({
     search: searchQuery,
-    count: 'patient.drug.medicinalproduct.exact',
     limit: '1',
   });
   return `${OPENFDA_API_BASE}?${params.toString()}`;
@@ -352,33 +352,58 @@ async function fetchCmsTopList(debug: boolean = false): Promise<{ topList: TopDr
     debugInfo.cmsFirstRowKeys = columns;
     debugInfo.cmsSampleRow = sanitizeSampleRow(firstRow);
     
-    // Choose best fields using scoring
-    const { nameField, exposureField, exposureType } = chooseFields(columns);
-    
+    // Choose name field (prefer Gnrc_Name)
+    const nameField = chooseNameField(columns);
     debugInfo.chosenNameField = nameField || undefined;
+    
+    // Choose exposure field (prefer latest year)
+    const exposureResult = chooseExposureField(columns);
+    const exposureField = exposureResult.field;
     debugInfo.chosenExposureField = exposureField || undefined;
-    debugInfo.exposureType = exposureType;
+    debugInfo.chosenYear = exposureResult.year || undefined;
+    debugInfo.exposureType = exposureResult.type;
     
     if (!nameField || !exposureField) {
       debugInfo.fetchErrorStage = 'cms_data';
       throw new Error(
-        `Could not identify required fields. Name candidates: ${columns.filter(c => scoreNameField(c) > 0).join(', ') || 'none'}. ` +
-        `Exposure candidates: ${columns.filter(c => scoreExposureField(c).score > 0).join(', ') || 'none'}.`
+        `Could not identify required fields. Name field: ${nameField || 'not found'}. ` +
+        `Exposure field: ${exposureField || 'not found'}. Available columns: ${columns.join(', ')}`
       );
     }
     
-    // Parse data
-    const topList: TopDrugItem[] = [];
+    // Filter rows: if Mftr_Name exists, prefer rows where Mftr_Name === "Overall"
+    let filteredData = data;
+    const hasMftrName = columns.some(c => c.toLowerCase().includes('mftr') || c.toLowerCase().includes('manufacturer'));
+    if (hasMftrName) {
+      const mftrField = columns.find(c => c.toLowerCase().includes('mftr') || c.toLowerCase().includes('manufacturer'));
+      if (mftrField) {
+        const overallRows = data.filter((row: unknown) => {
+          const rowObj = row as Record<string, unknown>;
+          const mftrValue = rowObj[mftrField];
+          return mftrValue && String(mftrValue).toLowerCase().trim() === 'overall';
+        });
+        
+        // Use filtered rows if we have any, otherwise fall back to all rows
+        if (overallRows.length > 0) {
+          filteredData = overallRows;
+        }
+      }
+    }
     
-    for (const row of data) {
+    // Parse and aggregate data (deduplicate by drug name)
+    const drugMap = new Map<string, number>();
+    
+    for (const row of filteredData) {
       const rowObj = row as Record<string, unknown>;
       const nameValue = rowObj[nameField];
       const exposureValue = rowObj[exposureField];
       
       if (!nameValue || !exposureValue) continue;
       
-      // Normalize drug name
-      const drugName = typeof nameValue === 'string' ? nameValue.trim().toUpperCase() : String(nameValue).trim().toUpperCase();
+      // Normalize drug name (trim, uppercase)
+      const drugName = typeof nameValue === 'string' 
+        ? nameValue.trim().toUpperCase() 
+        : String(nameValue).trim().toUpperCase();
       if (!drugName) continue;
       
       // Parse exposure count
@@ -391,22 +416,23 @@ async function fetchCmsTopList(debug: boolean = false): Promise<{ topList: TopDr
       
       if (isNaN(exposureCount) || exposureCount <= 0) continue;
       
-      topList.push({
-        drugName,
-        exposureCount: Math.round(exposureCount),
-      });
+      // Aggregate: sum exposure counts for same drug name
+      const existing = drugMap.get(drugName) || 0;
+      drugMap.set(drugName, existing + Math.round(exposureCount));
     }
     
-    if (topList.length === 0) {
+    if (drugMap.size === 0) {
       debugInfo.fetchErrorStage = 'cms_data';
       throw new Error('Could not extract drug names or exposure counts from CMS data');
     }
     
-    // Sort by exposure count descending and take top 50
-    topList.sort((a, b) => b.exposureCount - a.exposureCount);
-    const top50 = topList.slice(0, 50);
+    // Convert map to array and sort by exposure count descending
+    const topList: TopDrugItem[] = Array.from(drugMap.entries())
+      .map(([drugName, exposureCount]) => ({ drugName, exposureCount }))
+      .sort((a, b) => b.exposureCount - a.exposureCount)
+      .slice(0, 50); // Top 50
     
-    debugInfo.derivedTopListPreview = top50.slice(0, 10);
+    debugInfo.derivedTopListPreview = topList.slice(0, 10);
     
     const result = { topList: top50, exposureType };
     
@@ -462,14 +488,16 @@ async function fetchFaersCount(drugName: string, days: number = 365, debug: bool
   }
   
   const { start, end } = getDateRange(days);
+  const cleanName = cleanDrugNameForFaers(drugName);
   
-  // Try first with regular search
-  let url = buildFaersUrl(drugName, start, end, false);
+  // Use exact match by default
+  let url = buildFaersUrl(drugName, start, end, true);
   debugInfo.faersRequestUrl = url;
   
   console.error('[data-signals-exposure]', {
     step: 'fetching FAERS count',
     drugName,
+    cleanName,
     url,
     timestamp: new Date().toISOString(),
   });
@@ -490,65 +518,48 @@ async function fetchFaersCount(drugName: string, days: number = 365, debug: bool
     debugInfo.faersStatus = response.status;
     
     if (!response.ok) {
+      // 404 means no results, treat as 0
+      if (response.status === 404) {
+        console.error('[data-signals-exposure]', {
+          step: 'FAERS no results (404)',
+          drugName,
+          cleanName,
+          timestamp: new Date().toISOString(),
+        });
+        return { count: 0, debugInfo: debug ? debugInfo : undefined };
+      }
+      
       const responseText = await response.text();
       const snippet = responseText.substring(0, 400);
       debugInfo.responseSnippet = snippet;
       debugInfo.fetchErrorStage = 'faers';
       
       console.error('[data-signals-exposure]', {
-        step: 'FAERS API error (attempt 1)',
+        step: 'FAERS API error',
         drugName,
+        cleanName,
         status: response.status,
         statusText: response.statusText,
         snippet,
         timestamp: new Date().toISOString(),
       });
       
-      // Try fallback with exact match
-      const fallbackUrl = buildFaersUrl(drugName, start, end, true);
-      debugInfo.faersRequestUrl = fallbackUrl;
-      
-      const fallbackController = new AbortController();
-      const fallbackTimeoutId = setTimeout(() => fallbackController.abort(), FETCH_TIMEOUT_MS);
-      
-      try {
-        response = await fetch(fallbackUrl, {
-          headers: {
-            'User-Agent': 'MedSafe Project (https://medsafeproject.org)',
-          },
-          signal: fallbackController.signal,
-        });
-        
-        clearTimeout(fallbackTimeoutId);
-        debugInfo.faersStatus = response.status;
-        
-        if (!response.ok) {
-          // Both attempts failed, return 0 instead of error
-          console.error('[data-signals-exposure]', {
-            step: 'FAERS API error (attempt 2)',
-            drugName,
-            status: response.status,
-            timestamp: new Date().toISOString(),
-          });
-          return { count: 0, debugInfo: debug ? debugInfo : undefined };
-        }
-      } catch (fallbackError) {
-        clearTimeout(fallbackTimeoutId);
-        // Return 0 instead of throwing
-        return { count: 0, debugInfo: debug ? debugInfo : undefined };
-      }
+      // Return 0 instead of throwing on API errors
+      return { count: 0, debugInfo: debug ? debugInfo : undefined };
     }
     
     const data = await response.json();
     
-    // Parse count from openFDA response
+    // Parse count from openFDA meta.results.total
     let count = 0;
     
-    if (data.results && Array.isArray(data.results) && data.results.length > 0) {
-      const firstResult = data.results[0];
-      if (firstResult.count !== undefined) {
-        count = typeof firstResult.count === 'number' ? firstResult.count : parseInt(String(firstResult.count), 10);
-      }
+    if (data.meta?.results?.total !== undefined) {
+      count = typeof data.meta.results.total === 'number' 
+        ? data.meta.results.total 
+        : parseInt(String(data.meta.results.total), 10);
+    } else if (data.results && Array.isArray(data.results) && data.results.length > 0) {
+      // Fallback to counting results array length if meta.total not available
+      count = data.results.length;
     }
     
     debugInfo.faersRawCount = count;
@@ -599,7 +610,7 @@ export const handler: Handler = async (
     };
   }
 
-  const drugName = event.queryStringParameters?.drug;
+  const requestedDrug = event.queryStringParameters?.drug;
   const debug = event.queryStringParameters?.debug === '1';
   const timeWindowDays = 365;
 
@@ -608,37 +619,29 @@ export const handler: Handler = async (
     const cmsResult = await fetchCmsTopList(debug);
     const { topList, exposureType, debugInfo: cmsDebugInfo } = cmsResult;
     
-    // If no drug specified, return just the top list
-    if (!drugName) {
-      const response: SignalsExposureResponse & { debug?: DebugInfo } = {
-        generatedAt: new Date().toISOString(),
-        sources: {
-          faers: 'openFDA drug/event.json',
-          cms: `data.cms.gov Part D Spending by Drug (dataset ${CMS_DATASET_ID})`,
-        },
-        timeWindowDays,
-        exposureType,
-        items: [],
-        topList,
-      };
-      
-      if (debug && cmsDebugInfo) {
-        response.debug = cmsDebugInfo;
-      }
-      
+    // Determine selected drug: use requested drug if provided, otherwise default to first in topList
+    const selectedDrugName = requestedDrug 
+      ? topList.find(d => d.drugName.toUpperCase() === requestedDrug.toUpperCase())?.drugName || topList[0]?.drugName
+      : topList[0]?.drugName;
+    
+    if (!selectedDrugName) {
       return {
-        statusCode: 200,
+        statusCode: 500,
         headers: {
           'Content-Type': 'application/json',
-          'Cache-Control': debug ? 'no-cache' : 'public, max-age=3600',
           ...corsHeaders,
         },
-        body: JSON.stringify(response),
+        body: JSON.stringify({
+          error: 'No drugs available',
+          details: 'Could not determine a drug to query',
+          generatedAt: new Date().toISOString(),
+          ...(debug && cmsDebugInfo ? { debug: cmsDebugInfo } : {}),
+        }),
       };
     }
     
     // Find exposure count for the selected drug
-    const selectedDrug = topList.find(d => d.drugName.toUpperCase() === drugName.toUpperCase());
+    const selectedDrug = topList.find(d => d.drugName === selectedDrugName);
     if (!selectedDrug) {
       return {
         statusCode: 404,
@@ -648,21 +651,28 @@ export const handler: Handler = async (
         },
         body: JSON.stringify({
           error: 'Drug not found',
-          details: `Drug "${drugName}" not found in top list`,
+          details: `Drug "${selectedDrugName}" not found in top list`,
           generatedAt: new Date().toISOString(),
           ...(debug && cmsDebugInfo ? { debug: cmsDebugInfo } : {}),
         }),
       };
     }
     
-    // Fetch FAERS count
-    const faersResult = await fetchFaersCount(drugName, timeWindowDays, debug);
+    // Fetch FAERS count (use cleaned name for query, but keep original for display)
+    const faersResult = await fetchFaersCount(selectedDrugName, timeWindowDays, debug);
     const { count: faersReports, debugInfo: faersDebugInfo } = faersResult;
     
     // Calculate rate per 100k
     const ratePer100k = selectedDrug.exposureCount > 0
       ? (faersReports / selectedDrug.exposureCount) * 100000
       : 0;
+    
+    const item: SignalExposureItem = {
+      drugName: selectedDrug.drugName,
+      faersReports,
+      exposureCount: selectedDrug.exposureCount,
+      ratePer100k: Math.round(ratePer100k * 10) / 10, // Round to 1 decimal
+    };
     
     const response: SignalsExposureResponse & { debug?: DebugInfo } = {
       generatedAt: new Date().toISOString(),
@@ -672,14 +682,7 @@ export const handler: Handler = async (
       },
       timeWindowDays,
       exposureType,
-      items: [
-        {
-          drugName: selectedDrug.drugName,
-          faersReports,
-          exposureCount: selectedDrug.exposureCount,
-          ratePer100k: Math.round(ratePer100k * 10) / 10, // Round to 1 decimal
-        },
-      ],
+      items: [item], // Always return single item
       topList,
     };
     
@@ -687,6 +690,8 @@ export const handler: Handler = async (
       response.debug = {
         ...cmsDebugInfo,
         ...faersDebugInfo,
+        selectedDrug: selectedDrugName,
+        itemPreview: item,
       };
     }
     
