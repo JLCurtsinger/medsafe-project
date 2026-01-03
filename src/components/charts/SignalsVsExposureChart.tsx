@@ -214,11 +214,18 @@ export function SignalsVsExposureChart({ className = '' }: SignalsVsExposureChar
     }
 
     const item = data.items[0];
+    if (!item) {
+      return {};
+    }
+
+    // Ensure value is always a number, even if 0
+    const value = Number(item.ratePer100k ?? 0);
+    
     const exposureTypeLabel = data.exposureType === 'beneficiaries' ? 'per 100k beneficiaries' : 'per 100k claims';
     const rateLabel = `Rate ${exposureTypeLabel}`;
     
     // Calculate xAxis max based on value (add 20% padding, minimum 1)
-    const xAxisMax = Math.max(1, item.ratePer100k * 1.2);
+    const xAxisMax = Math.max(1, value * 1.2);
 
     return {
       backgroundColor: 'transparent',
@@ -235,7 +242,7 @@ export function SignalsVsExposureChart({ className = '' }: SignalsVsExposureChar
               <div style="font-weight: bold; margin-bottom: 4px;">${item.drugName}</div>
               <div>FAERS Reports (${data.timeWindowDays} days): <strong>${item.faersReports.toLocaleString()}</strong></div>
               <div>Exposure Count: <strong>${item.exposureCount.toLocaleString()}</strong></div>
-              <div>Rate ${exposureTypeLabel}: <strong>${item.ratePer100k.toFixed(1)}</strong></div>
+              <div>Rate ${exposureTypeLabel}: <strong>${value.toFixed(1)}</strong></div>
             </div>
           `;
         },
@@ -292,7 +299,7 @@ export function SignalsVsExposureChart({ className = '' }: SignalsVsExposureChar
       series: [
         {
           type: 'bar',
-          data: [item.ratePer100k],
+          data: [value],
           itemStyle: {
             color: 'hsl(15, 83%, 54%)', // accent color
           },
@@ -342,8 +349,14 @@ export function SignalsVsExposureChart({ className = '' }: SignalsVsExposureChar
     );
   }
 
-  const currentItem = data.items && data.items.length > 0 ? data.items[0] : null;
+  const item = data?.items?.[0];
   const exposureTypeLabel = data.exposureType === 'beneficiaries' ? 'per 100k beneficiaries' : 'per 100k claims';
+
+  // Dev-only console log
+  if (import.meta.env.DEV && item) {
+    const value = Number(item.ratePer100k ?? 0);
+    console.log("[SignalsVsExposure]", { selectedDrug, item, value, exposureType: data?.exposureType });
+  }
 
   return (
     <div className={`space-y-4 ${className}`}>
@@ -367,14 +380,14 @@ export function SignalsVsExposureChart({ className = '' }: SignalsVsExposureChar
       </div>
 
       {/* Chart */}
-      {loading && currentItem ? (
+      {loading && item ? (
         <div className="h-64 md:h-80 w-full flex items-center justify-center">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent mb-4"></div>
             <p className="text-sm text-gray-600 dark:text-gray-400">Loading chart data...</p>
           </div>
         </div>
-      ) : currentItem ? (
+      ) : item ? (
         <div className="h-64 md:h-80 w-full">
           <ReactECharts
             ref={chartRef}

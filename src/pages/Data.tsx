@@ -2,6 +2,7 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { SEO } from "@/components/SEO";
 import { DataSectionCard } from "@/components/DataSectionCard";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { WordCloudChart } from "@/components/charts/WordCloudChart";
 import { SignalsVsExposureChart } from "@/components/charts/SignalsVsExposureChart";
@@ -25,7 +26,7 @@ export default function Data() {
                 Interaction Data
               </h1>
               <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
-                Interactive visuals to spot patterns in medication and supplement data.
+                Interactive visuals to spot patterns in medication and supplement interaction data.
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-500 mb-8 italic">
                 For educational use only. 
@@ -78,11 +79,22 @@ export default function Data() {
           {/* Section 2: Signals vs exposure */}
           <ScrollReveal delay={200}>
             <div className="max-w-5xl mx-auto mb-12">
-              <DataSectionCard
-                title="Signals vs exposure"
-                description="Compare reported adverse events against medication exposure rates to identify potential safety signals that may warrant further investigation."
-                comingSoon={true}
-              >
+              <div className="space-y-6">
+                <div>
+                  <div className="flex items-start justify-between gap-4 mb-2">
+                    <div className="flex-1">
+                      <h2 className="text-xl md:text-2xl font-serif mb-2 text-charcoal dark:text-white">
+                        Signals vs exposure
+                      </h2>
+                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+                        Compare reported adverse events against medication exposure rates to identify potential safety signals that may warrant further investigation.
+                      </p>
+                    </div>
+                    <Badge variant="outline" className="shrink-0 text-xs border-accent/30 text-accent dark:text-accent">
+                      Coming soon
+                    </Badge>
+                  </div>
+                </div>
                 <SignalsVsExposureChart />
                 
                 <div className="mt-6 pt-6 border-t border-white/10 dark:border-white/5">
@@ -92,7 +104,16 @@ export default function Data() {
                     This visualization helps identify medications that may have disproportionate safety concerns.
                   </p>
                 </div>
-              </DataSectionCard>
+                <div className="mt-6 flex justify-end">
+                  <Button 
+                    variant="outline" 
+                    disabled
+                    className="border-accent/20 text-accent/60 dark:text-accent/60"
+                  >
+                    Explore
+                  </Button>
+                </div>
+              </div>
             </div>
           </ScrollReveal>
 
