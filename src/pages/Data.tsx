@@ -4,6 +4,7 @@ import { DataSectionCard } from "@/components/DataSectionCard";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { WordCloudChart } from "@/components/charts/WordCloudChart";
+import { SignalsVsExposureChart } from "@/components/charts/SignalsVsExposureChart";
 
 export default function Data() {
   return (
@@ -21,13 +22,13 @@ export default function Data() {
           <ScrollReveal>
             <div className="max-w-4xl mx-auto text-center mb-16">
               <h1 className="text-4xl md:text-5xl font-serif font-semibold mb-4 text-charcoal dark:text-white">
-                Data
+                Interaction Data
               </h1>
               <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
-                Interactive visuals to understand medication and supplement risk signals.
+                Interactive visuals to spot patterns in medication and supplement data.
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-500 mb-8 italic">
-                Educational only. Not medical advice.
+                For educational use only. 
               </p>
               
               {/* Data Sources Row */}
@@ -82,24 +83,7 @@ export default function Data() {
                 description="Compare reported adverse events against medication exposure rates to identify potential safety signals that may warrant further investigation."
                 comingSoon={true}
               >
-                <div className="h-64 md:h-80 w-full rounded-lg overflow-hidden 
-                  bg-gradient-to-br from-gray-100 to-gray-200 dark:from-charcoal/50 dark:to-charcoal/70
-                  border border-white/20 dark:border-white/10
-                  flex items-center justify-center">
-                  <div className="w-full h-full p-6 space-y-4">
-                    <div className="flex items-end justify-center gap-2 h-3/4">
-                      <Skeleton className="h-1/4 w-8" />
-                      <Skeleton className="h-1/2 w-8" />
-                      <Skeleton className="h-3/4 w-8" />
-                      <Skeleton className="h-full w-8" />
-                      <Skeleton className="h-2/3 w-8" />
-                      <Skeleton className="h-1/3 w-8" />
-                      <Skeleton className="h-1/2 w-8" />
-                      <Skeleton className="h-3/4 w-8" />
-                    </div>
-                    <Skeleton className="h-2 w-full" />
-                  </div>
-                </div>
+                <SignalsVsExposureChart />
                 
                 <div className="mt-6 pt-6 border-t border-white/10 dark:border-white/5">
                   <p className="text-sm text-gray-600 dark:text-gray-400 italic">
