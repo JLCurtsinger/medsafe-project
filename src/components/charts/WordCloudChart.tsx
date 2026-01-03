@@ -191,10 +191,7 @@ export function WordCloudChart({ className = '' }: WordCloudChartProps) {
 
   if (loading) {
     return (
-      <div className={`h-64 md:h-80 w-full rounded-lg overflow-hidden 
-        bg-gradient-to-br from-gray-100 to-gray-200 dark:from-charcoal/50 dark:to-charcoal/70
-        border border-white/20 dark:border-white/10
-        flex items-center justify-center ${className}`}>
+      <div className={`h-64 md:h-80 w-full flex items-center justify-center ${className}`}>
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent mb-4"></div>
           <p className="text-sm text-gray-600 dark:text-gray-400">Loading word cloud data...</p>
@@ -205,10 +202,7 @@ export function WordCloudChart({ className = '' }: WordCloudChartProps) {
 
   if (error) {
     return (
-      <div className={`h-64 md:h-80 w-full rounded-lg overflow-hidden 
-        bg-gradient-to-br from-gray-100 to-gray-200 dark:from-charcoal/50 dark:to-charcoal/70
-        border border-white/20 dark:border-white/10
-        flex items-center justify-center ${className}`}>
+      <div className={`h-64 md:h-80 w-full flex items-center justify-center ${className}`}>
         <div className="text-center px-4">
           <p className="text-sm text-red dark:text-red/80 mb-2">Failed to load data</p>
           <p className="text-xs text-gray-600 dark:text-gray-400">{error}</p>
@@ -219,38 +213,20 @@ export function WordCloudChart({ className = '' }: WordCloudChartProps) {
 
   if (!data || !data.terms || data.terms.length === 0) {
     return (
-      <div className={`h-64 md:h-80 w-full rounded-lg overflow-hidden 
-        bg-gradient-to-br from-gray-100 to-gray-200 dark:from-charcoal/50 dark:to-charcoal/70
-        border border-white/20 dark:border-white/10
-        flex items-center justify-center ${className}`}>
+      <div className={`h-64 md:h-80 w-full flex items-center justify-center ${className}`}>
         <p className="text-sm text-gray-600 dark:text-gray-400">No data available</p>
       </div>
     );
   }
 
   return (
-    <div className={className}>
-      <div className="h-64 md:h-80 w-full rounded-lg overflow-hidden 
-        bg-gradient-to-br from-gray-50 to-gray-100 dark:from-charcoal/40 dark:to-charcoal/60
-        border border-white/20 dark:border-white/10">
-        <ReactECharts
-          ref={chartRef}
-          option={getOption()}
-          style={{ height: '100%', width: '100%' }}
-          opts={{ renderer: 'svg' }}
-        />
-      </div>
-      {data.generatedAt && (
-        <p className="text-xs text-gray-500 dark:text-gray-500 mt-3 text-center">
-          Last updated {new Date(data.generatedAt).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          })}
-        </p>
-      )}
+    <div className={`h-64 md:h-80 w-full ${className}`}>
+      <ReactECharts
+        ref={chartRef}
+        option={getOption()}
+        style={{ height: '100%', width: '100%' }}
+        opts={{ renderer: 'svg' }}
+      />
     </div>
   );
 }
