@@ -28,34 +28,6 @@ export default function Data() {
               <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
                 Interactive visuals to spot patterns in medication and supplement interaction data.
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-500 mb-8 italic">
-                For educational use only. 
-              </p>
-              
-              {/* Data Sources Row */}
-              <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-                <Badge 
-                  variant="outline" 
-                  className="px-4 py-2 text-xs md:text-sm border-gray-300 dark:border-gray-600 
-                    bg-white/50 dark:bg-charcoal/30 text-gray-700 dark:text-gray-300"
-                >
-                  FDA drug labels (openFDA)
-                </Badge>
-                <Badge 
-                  variant="outline" 
-                  className="px-4 py-2 text-xs md:text-sm border-gray-300 dark:border-gray-600 
-                    bg-white/50 dark:bg-charcoal/30 text-gray-700 dark:text-gray-300"
-                >
-                  Adverse event reports (FAERS)
-                </Badge>
-                <Badge 
-                  variant="outline" 
-                  className="px-4 py-2 text-xs md:text-sm border-gray-300 dark:border-gray-600 
-                    bg-white/50 dark:bg-charcoal/30 text-gray-700 dark:text-gray-300"
-                >
-                  Medication exposure (CMS Part D)
-                </Badge>
-              </div>
             </div>
           </ScrollReveal>
 
@@ -149,8 +121,44 @@ export default function Data() {
             </div>
           </ScrollReveal>
 
-          {/* Footer Note */}
+          {/* Data Sources Disclaimer */}
           <ScrollReveal delay={400}>
+            <div className="max-w-4xl mx-auto mb-12">
+              <div className="text-center">
+                <p className="text-sm text-gray-500 dark:text-gray-500 mb-6 italic">
+                  For educational use only. 
+                </p>
+                
+                {/* Data Sources Row */}
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <Badge 
+                    variant="outline" 
+                    className="px-4 py-2 text-xs md:text-sm border-gray-300 dark:border-gray-600 
+                      bg-white/50 dark:bg-charcoal/30 text-gray-700 dark:text-gray-300"
+                  >
+                    FDA drug labels (openFDA)
+                  </Badge>
+                  <Badge 
+                    variant="outline" 
+                    className="px-4 py-2 text-xs md:text-sm border-gray-300 dark:border-gray-600 
+                      bg-white/50 dark:bg-charcoal/30 text-gray-700 dark:text-gray-300"
+                  >
+                    Adverse event reports (FAERS)
+                  </Badge>
+                  <Badge 
+                    variant="outline" 
+                    className="px-4 py-2 text-xs md:text-sm border-gray-300 dark:border-gray-600 
+                      bg-white/50 dark:bg-charcoal/30 text-gray-700 dark:text-gray-300"
+                  >
+                    Medication exposure (CMS Part D)
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* Footer Note */}
+          <ScrollReveal delay={500}>
             <div className="max-w-4xl mx-auto mt-16">
               <div className="bg-white/60 dark:bg-charcoal/30 backdrop-blur-sm 
                 border border-white/20 dark:border-white/10
