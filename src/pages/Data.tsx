@@ -63,10 +63,10 @@ export default function Data() {
               <div className="space-y-6">
                 <div>
                   <h2 className="text-xl md:text-2xl font-serif mb-2 text-charcoal dark:text-white">
-                    Interaction language word cloud
+                    Commonly Used Interaction language
                   </h2>
                   <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
-                    Visualize the most common terms and phrases used to describe drug interactions across FDA labeling documents. This helps identify patterns in how interactions are communicated.
+                    A visualization of the most common terms and phrases used to describe drug interactions across FDA labeling documents to identify patterns in how interactions are communicated.
                   </p>
                 </div>
                 <WordCloudChart />
