@@ -68,6 +68,10 @@ interface DebugInfo {
   faersStrategyUsed?: 'rxcui' | 'name-fallback';
   faersSearchUrlUsed?: string;
   faersTotal?: number;
+  faersFinalUrlUsed?: string;
+  faersStatus?: number;
+  faersTotalParsed?: number;
+  faersErrorText?: string;
 }
 
 interface CacheEntry {
@@ -76,7 +80,7 @@ interface CacheEntry {
 }
 
 // Cache version for cache busting on deploys
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 
 // In-memory caches
 let cmsTopListCache: CacheEntry | null = null;
@@ -880,36 +884,34 @@ async function fetchFaersCount(drugName: string, days: number = 365, debug: bool
       
       clearTimeout(timeoutId);
       
+      if (debug) {
+        debugInfo.faersStatus = response.status;
+        debugInfo.faersFinalUrlUsed = url;
+      }
+      
       if (response.ok) {
         const data = await response.json();
         
-        // Parse count from openFDA meta.results.total
-        let count = 0;
-        
-        if (data.meta?.results?.total !== undefined) {
-          count = typeof data.meta.results.total === 'number' 
-            ? data.meta.results.total 
-            : parseInt(String(data.meta.results.total), 10);
-        } else if (data.results && Array.isArray(data.results) && data.results.length > 0) {
-          count = data.results.length;
-        }
+        // Parse count from openFDA meta.results.total (NO count= parameter used)
+        const total = Number(data?.meta?.results?.total ?? 0);
         
         if (debug) {
+          debugInfo.faersTotalParsed = total;
           debugInfo.faersAttemptedQueries!.push({
             label: 'rxcui',
             url,
-            total: count,
+            total,
           });
-          debugInfo.faersChosen = { label: 'rxcui', total: count };
+          debugInfo.faersChosen = { label: 'rxcui', total };
         }
         
         debugInfo.faersStrategyUsed = 'rxcui';
-        debugInfo.faersTotal = count;
+        debugInfo.faersTotal = total;
         
         // Cache the result (only if not debug and not refresh)
         if (!debug && !refresh) {
           faersCache.set(cacheKey, {
-            data: count,
+            data: total,
             expiresAt: Date.now() + CACHE_TTL_MS,
           });
         }
@@ -918,19 +920,34 @@ async function fetchFaersCount(drugName: string, days: number = 365, debug: bool
           step: 'FAERS count fetched (RxCUI)',
           drugName,
           rxcui,
-          count,
+          count: total,
           timestamp: new Date().toISOString(),
         });
         
-        return { count, debugInfo: debug ? debugInfo : undefined };
+        return { count: total, debugInfo: debug ? debugInfo : undefined };
+      } else {
+        // Non-200 response
+        if (debug) {
+          const responseText = await response.text().catch(() => '');
+          const errorText = responseText.substring(0, 500);
+          debugInfo.faersErrorText = errorText;
+          debugInfo.faersAttemptedQueries!.push({
+            label: 'rxcui',
+            url,
+            error: `${response.status} ${response.statusText}`,
+          });
+        }
+        // Fall through to name-based fallback
       }
     } catch (error) {
       clearTimeout(timeoutId);
       if (debug) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        debugInfo.faersErrorText = errorMessage.substring(0, 500);
         debugInfo.faersAttemptedQueries!.push({
           label: 'rxcui',
           url,
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: errorMessage,
         });
       }
       // Fall through to name-based fallback
@@ -980,10 +997,18 @@ async function fetchFaersCount(drugName: string, days: number = 365, debug: bool
       
       clearTimeout(timeoutId);
       
+      if (debug) {
+        debugInfo.faersStatus = response.status;
+        if (!debugInfo.faersFinalUrlUsed) {
+          debugInfo.faersFinalUrlUsed = url;
+        }
+      }
+      
       if (!response.ok) {
         // 404 means no results, treat as 0 and continue to next attempt
         if (response.status === 404) {
           if (debug) {
+            debugInfo.faersTotalParsed = 0;
             debugInfo.faersAttemptedQueries!.push({
               label: attempt.label,
               url,
@@ -994,14 +1019,15 @@ async function fetchFaersCount(drugName: string, days: number = 365, debug: bool
         }
         
         // Other errors: record and continue
-        const responseText = await response.text();
-        const snippet = responseText.substring(0, 400);
+        const responseText = await response.text().catch(() => '');
+        const errorText = responseText.substring(0, 500);
         
         if (debug) {
+          debugInfo.faersErrorText = errorText;
           debugInfo.faersAttemptedQueries!.push({
             label: attempt.label,
             url,
-            error: `${response.status} ${response.statusText}: ${snippet.substring(0, 100)}`,
+            error: `${response.status} ${response.statusText}`,
           });
         }
         
@@ -1018,32 +1044,25 @@ async function fetchFaersCount(drugName: string, days: number = 365, debug: bool
       
       const data = await response.json();
       
-      // Parse count from openFDA meta.results.total
-      let count = 0;
-      
-      if (data.meta?.results?.total !== undefined) {
-        count = typeof data.meta.results.total === 'number' 
-          ? data.meta.results.total 
-          : parseInt(String(data.meta.results.total), 10);
-      } else if (data.results && Array.isArray(data.results) && data.results.length > 0) {
-        // Fallback to counting results array length if meta.total not available
-        count = data.results.length;
-      }
+      // Parse count from openFDA meta.results.total (NO count= parameter used)
+      const total = Number(data?.meta?.results?.total ?? 0);
       
       if (debug) {
+        debugInfo.faersTotalParsed = total;
         debugInfo.faersAttemptedQueries!.push({
           label: attempt.label,
           url,
-          total: count,
+          total,
         });
       }
       
       // If we got a non-zero result, use it and stop
-      if (count > 0) {
-        chosenAttempt = { label: attempt.label, total: count };
+      if (total > 0) {
+        chosenAttempt = { label: attempt.label, total };
         if (!debugInfo.faersSearchUrlUsed) {
           debugInfo.faersSearchUrlUsed = url;
         }
+        debugInfo.faersFinalUrlUsed = url;
         break; // Found a match, stop trying
       }
       
@@ -1082,6 +1101,10 @@ async function fetchFaersCount(drugName: string, days: number = 365, debug: bool
   
   if (debug && chosenAttempt) {
     debugInfo.faersChosen = chosenAttempt;
+  }
+  
+  if (debug && !debugInfo.faersTotalParsed && count === 0) {
+    debugInfo.faersTotalParsed = 0;
   }
   
   debugInfo.faersRawCount = count;
