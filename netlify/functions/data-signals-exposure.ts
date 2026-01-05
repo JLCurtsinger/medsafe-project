@@ -80,7 +80,7 @@ interface CacheEntry {
 }
 
 // Cache version for cache busting on deploys
-const CACHE_VERSION = 'v4';
+const CACHE_VERSION = 'v5';
 
 // In-memory caches
 let cmsTopListCache: CacheEntry | null = null;
@@ -347,7 +347,8 @@ function buildFaersUrl(
   queryType: 'rxcui' | 'generic_exact' | 'brand_exact' | 'medicinalproduct',
   value: string
 ): string {
-  const dateConstraint = `receivedate:[${startDate}+TO+${endDate}]`;
+  // Use spaces (not '+') in the search string
+  const dateConstraint = `receivedate:[${startDate} TO ${endDate}]`;
   let drugConstraint: string;
   
   switch (queryType) {
@@ -365,12 +366,15 @@ function buildFaersUrl(
       break;
   }
   
-  const searchQuery = `${dateConstraint}+AND+${drugConstraint}`;
-  const params = new URLSearchParams({
-    search: searchQuery,
-    limit: '1',
-  });
-  return `${OPENFDA_API_BASE}?${params.toString()}`;
+  // Build search string with spaces (not '+')
+  const searchQuery = `${dateConstraint} AND ${drugConstraint}`;
+  
+  // Encode the entire search string once using encodeURIComponent
+  // This will encode spaces as %20, not %2B
+  const encodedSearch = encodeURIComponent(searchQuery);
+  
+  // Build URL manually to avoid double-encoding
+  return `${OPENFDA_API_BASE}?search=${encodedSearch}&limit=1`;
 }
 
 function getDateRange(days: number): { start: string; end: string } {
