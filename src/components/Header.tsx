@@ -130,19 +130,9 @@ export function Header() {
 
       {/* Mobile Menu - Enhanced with frosted glass effect and animations */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-40 pt-20 bg-transparent">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            className="absolute top-4 right-4" 
-            onClick={closeMobileMenu}
-            aria-label="Close Menu"
-          >
-            <X className="h-6 w-6 text-charcoal dark:text-white" />
-          </Button>
-          
+        <div className="md:hidden absolute right-0 top-full z-40">
           {/* Frosted glass navigation panel */}
-          <nav className="flex flex-col items-center space-y-6 p-8 mx-4 rounded-xl 
+          <nav className="flex flex-col space-y-6 p-8 w-[320px] max-w-[90%] rounded-xl 
             bg-white/90 dark:bg-charcoal/90 backdrop-blur-lg 
             shadow-lg border border-white/20 dark:border-white/10
             animate-fade-in">
