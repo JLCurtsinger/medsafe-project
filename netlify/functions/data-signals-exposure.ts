@@ -432,9 +432,15 @@ async function fetchCmsTopList(debug: boolean = false): Promise<{ topList: TopDr
       .sort((a, b) => b.exposureCount - a.exposureCount)
       .slice(0, 50); // Top 50
     
+    // Defensive check: if topList is empty, return empty result
+    if (!topList.length) {
+      debugInfo.fetchErrorStage = 'cms_data';
+      throw new Error('CMS data parsed but resulted in empty top list');
+    }
+    
     debugInfo.derivedTopListPreview = topList.slice(0, 10);
     
-    const result = { topList: top50, exposureType };
+    const result = { topList, exposureType };
     
     // Cache the result (only if not debug)
     if (!debug) {
@@ -446,7 +452,7 @@ async function fetchCmsTopList(debug: boolean = false): Promise<{ topList: TopDr
     
     console.error('[data-signals-exposure]', {
       step: 'CMS top list fetched',
-      count: top50.length,
+      count: topList.length,
       exposureType,
       nameField,
       exposureField,
@@ -619,24 +625,66 @@ export const handler: Handler = async (
     const cmsResult = await fetchCmsTopList(debug);
     const { topList, exposureType, debugInfo: cmsDebugInfo } = cmsResult;
     
+    // Defensive check: if topList is empty, return valid response with empty items
+    if (!topList || !topList.length) {
+      const response: SignalsExposureResponse & { debug?: DebugInfo } = {
+        generatedAt: new Date().toISOString(),
+        sources: {
+          faers: 'openFDA drug/event.json',
+          cms: `data.cms.gov Part D Spending by Drug (dataset ${CMS_DATASET_ID})`,
+        },
+        timeWindowDays,
+        exposureType,
+        items: [],
+        topList: [],
+      };
+      
+      if (debug && cmsDebugInfo) {
+        response.debug = cmsDebugInfo;
+      }
+      
+      return {
+        statusCode: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': debug ? 'no-cache' : 'public, max-age=3600',
+          ...corsHeaders,
+        },
+        body: JSON.stringify(response),
+      };
+    }
+    
     // Determine selected drug: use requested drug if provided, otherwise default to first in topList
     const selectedDrugName = requestedDrug 
       ? topList.find(d => d.drugName.toUpperCase() === requestedDrug.toUpperCase())?.drugName || topList[0]?.drugName
       : topList[0]?.drugName;
     
     if (!selectedDrugName) {
+      // Return valid response with empty items instead of error
+      const response: SignalsExposureResponse & { debug?: DebugInfo } = {
+        generatedAt: new Date().toISOString(),
+        sources: {
+          faers: 'openFDA drug/event.json',
+          cms: `data.cms.gov Part D Spending by Drug (dataset ${CMS_DATASET_ID})`,
+        },
+        timeWindowDays,
+        exposureType,
+        items: [],
+        topList,
+      };
+      
+      if (debug && cmsDebugInfo) {
+        response.debug = cmsDebugInfo;
+      }
+      
       return {
-        statusCode: 500,
+        statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
+          'Cache-Control': debug ? 'no-cache' : 'public, max-age=3600',
           ...corsHeaders,
         },
-        body: JSON.stringify({
-          error: 'No drugs available',
-          details: 'Could not determine a drug to query',
-          generatedAt: new Date().toISOString(),
-          ...(debug && cmsDebugInfo ? { debug: cmsDebugInfo } : {}),
-        }),
+        body: JSON.stringify(response),
       };
     }
     
