@@ -359,9 +359,10 @@ async function fetchCmsTopList(debug: boolean = false): Promise<{ topList: TopDr
     // Choose exposure field (prefer latest year)
     const exposureResult = chooseExposureField(columns);
     const exposureField = exposureResult.field;
+    const exposureType: "beneficiaries" | "claims" = exposureResult.type;
     debugInfo.chosenExposureField = exposureField || undefined;
     debugInfo.chosenYear = exposureResult.year || undefined;
-    debugInfo.exposureType = exposureResult.type;
+    debugInfo.exposureType = exposureType;
     
     if (!nameField || !exposureField) {
       debugInfo.fetchErrorStage = 'cms_data';
@@ -625,16 +626,21 @@ export const handler: Handler = async (
     const cmsResult = await fetchCmsTopList(debug);
     const { topList, exposureType, debugInfo: cmsDebugInfo } = cmsResult;
     
+    // Create base response object to prevent "forgot to include exposureType" bugs
+    const baseResponse = {
+      generatedAt: new Date().toISOString(),
+      sources: {
+        faers: 'openFDA drug/event.json',
+        cms: `data.cms.gov Part D Spending by Drug (dataset ${CMS_DATASET_ID})`,
+      },
+      timeWindowDays,
+      exposureType,
+    };
+    
     // Defensive check: if topList is empty, return valid response with empty items
     if (!topList || !topList.length) {
       const response: SignalsExposureResponse & { debug?: DebugInfo } = {
-        generatedAt: new Date().toISOString(),
-        sources: {
-          faers: 'openFDA drug/event.json',
-          cms: `data.cms.gov Part D Spending by Drug (dataset ${CMS_DATASET_ID})`,
-        },
-        timeWindowDays,
-        exposureType,
+        ...baseResponse,
         items: [],
         topList: [],
       };
@@ -662,13 +668,7 @@ export const handler: Handler = async (
     if (!selectedDrugName) {
       // Return valid response with empty items instead of error
       const response: SignalsExposureResponse & { debug?: DebugInfo } = {
-        generatedAt: new Date().toISOString(),
-        sources: {
-          faers: 'openFDA drug/event.json',
-          cms: `data.cms.gov Part D Spending by Drug (dataset ${CMS_DATASET_ID})`,
-        },
-        timeWindowDays,
-        exposureType,
+        ...baseResponse,
         items: [],
         topList,
       };
@@ -701,6 +701,7 @@ export const handler: Handler = async (
           error: 'Drug not found',
           details: `Drug "${selectedDrugName}" not found in top list`,
           generatedAt: new Date().toISOString(),
+          exposureType,
           ...(debug && cmsDebugInfo ? { debug: cmsDebugInfo } : {}),
         }),
       };
@@ -723,13 +724,7 @@ export const handler: Handler = async (
     };
     
     const response: SignalsExposureResponse & { debug?: DebugInfo } = {
-      generatedAt: new Date().toISOString(),
-      sources: {
-        faers: 'openFDA drug/event.json',
-        cms: `data.cms.gov Part D Spending by Drug (dataset ${CMS_DATASET_ID})`,
-      },
-      timeWindowDays,
-      exposureType,
+      ...baseResponse,
       items: [item], // Always return single item
       topList,
     };
@@ -758,6 +753,9 @@ export const handler: Handler = async (
     const errorStack = error instanceof Error ? error.stack : undefined;
     const debugInfo = (error as Error & { debugInfo?: DebugInfo })?.debugInfo;
     
+    // Default exposureType if CMS parsing failed
+    const exposureType: "beneficiaries" | "claims" = "beneficiaries";
+    
     console.error('[data-signals-exposure]', {
       step: 'handler error',
       errorName,
@@ -768,20 +766,35 @@ export const handler: Handler = async (
     
     // If we have debug info from CMS parsing failure, include it
     if (errorMessage.includes('CMS schema parse failed') || errorMessage.includes('Could not identify')) {
+      const errorResponse: Record<string, unknown> = {
+        error: 'CMS schema parse failed',
+        details: errorMessage,
+        generatedAt: new Date().toISOString(),
+        exposureType,
+        ...(debugInfo || {}),
+      };
+      
+      if (debug) {
+        errorResponse.debug = { ...debugInfo, exposureType };
+      }
+      
       return {
         statusCode: 500,
         headers: {
           'Content-Type': 'application/json',
           ...corsHeaders,
         },
-        body: JSON.stringify({
-          error: 'CMS schema parse failed',
-          details: errorMessage,
-          generatedAt: new Date().toISOString(),
-          ...(debugInfo || {}),
-        }),
+        body: JSON.stringify(errorResponse),
       };
     }
+    
+    const errorResponse: Record<string, unknown> = {
+      error: 'data-signals-exposure failed',
+      details: `${errorName}: ${errorMessage}`,
+      generatedAt: new Date().toISOString(),
+      exposureType,
+      ...(debug && debugInfo ? { debug: { ...debugInfo, exposureType } } : {}),
+    };
     
     return {
       statusCode: 500,
@@ -789,12 +802,7 @@ export const handler: Handler = async (
         'Content-Type': 'application/json',
         ...corsHeaders,
       },
-      body: JSON.stringify({
-        error: 'data-signals-exposure failed',
-        details: `${errorName}: ${errorMessage}`,
-        generatedAt: new Date().toISOString(),
-        ...(debug && debugInfo ? { debug: debugInfo } : {}),
-      }),
+      body: JSON.stringify(errorResponse),
     };
   }
 };
