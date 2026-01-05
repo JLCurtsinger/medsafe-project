@@ -58,6 +58,16 @@ interface DebugInfo {
   selectedDrugQueryName?: string;
   faersAttemptedQueries?: Array<{ label: string; url: string; total?: number; error?: string }>;
   faersChosen?: { label: string; total: number };
+  // New debug fields
+  cmsUsedYear?: number;
+  cmsNameField?: string;
+  topListFirst10?: TopDrugItem[];
+  cacheBypassed?: boolean;
+  selectedDrugNormalized?: string;
+  resolvedRxcui?: string | null;
+  faersStrategyUsed?: 'rxcui' | 'name-fallback';
+  faersSearchUrlUsed?: string;
+  faersTotal?: number;
 }
 
 interface CacheEntry {
@@ -65,16 +75,22 @@ interface CacheEntry {
   expiresAt: number;
 }
 
+// Cache version for cache busting on deploys
+const CACHE_VERSION = 'v3';
+
 // In-memory caches
 let cmsTopListCache: CacheEntry | null = null;
 const faersCache = new Map<string, CacheEntry>();
+const rxcuiCache = new Map<string, CacheEntry>();
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
+const RXCUI_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 const FETCH_TIMEOUT_MS = 10000; // 10 seconds
 
 const CMS_DATASET_ID = '7e0b4365-fd63-4a29-8f5e-e0ac9f66a81b';
 const CMS_API_BASE = `https://data.cms.gov/data-api/v1/dataset/${CMS_DATASET_ID}`;
 const CMS_DATA_URL = `${CMS_API_BASE}/data`;
 const OPENFDA_API_BASE = 'https://api.fda.gov/drug/event.json';
+const RXNORM_API_BASE = 'https://rxnav.nlm.nih.gov/REST';
 
 // CORS headers helper
 const corsHeaders = {
@@ -221,19 +237,127 @@ function normalizeCmsNameForFaers(raw: string): { displayName: string; queryName
   return { displayName, queryName };
 }
 
-function buildFaersUrl(drugName: string, startDate: string, endDate: string, queryType: 'generic_exact' | 'brand_exact' | 'medicinalproduct'): string {
+/**
+ * Normalize drug name for RxNorm query (server-side normalization)
+ * - Uppercase, trim
+ * - Remove trailing *
+ * - Replace / and , with spaces
+ * - Collapse whitespace
+ * - If contains " WITH ", try full string first, then left-side token as fallback
+ */
+function normalizeForRxNorm(drugName: string): string[] {
+  let normalized = drugName.toUpperCase().trim();
+  
+  // Remove trailing *
+  normalized = normalized.replace(/\*+$/, '');
+  
+  // Replace / and , with spaces
+  normalized = normalized.replace(/[/,]/g, ' ');
+  
+  // Collapse whitespace
+  normalized = normalized.replace(/\s+/g, ' ').trim();
+  
+  // If contains " WITH ", return both full string and left-side token
+  if (normalized.includes(' WITH ')) {
+    const leftSide = normalized.split(' WITH ')[0].trim();
+    return [normalized, leftSide];
+  }
+  
+  return [normalized];
+}
+
+/**
+ * Resolve drug name to RxNorm RxCUI using approximate term endpoint
+ * Returns RxCUI string or null if not found
+ */
+async function resolveRxcui(drugName: string, debug: boolean = false): Promise<string | null> {
+  const normalizedNames = normalizeForRxNorm(drugName);
+  const cacheKey = `rxcui:${CACHE_VERSION}:${normalizedNames[0]}`;
+  
+  // Check cache
+  const cached = rxcuiCache.get(cacheKey);
+  if (cached && Date.now() < cached.expiresAt) {
+    return cached.data as string | null;
+  }
+  
+  // Try each normalized name variant
+  for (const normalizedName of normalizedNames) {
+    const url = `${RXNORM_API_BASE}/approximateTerm.json?term=${encodeURIComponent(normalizedName)}&maxEntries=1`;
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+    
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'MedSafe Project (https://medsafeproject.org)',
+        },
+        signal: controller.signal,
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        continue; // Try next variant
+      }
+      
+      const data = await response.json();
+      
+      // RxNorm approximateTerm response structure:
+      // { approximateGroup: { candidate: [{ rxcui: "...", ... }] } }
+      if (data.approximateGroup?.candidate && Array.isArray(data.approximateGroup.candidate)) {
+        const candidates = data.approximateGroup.candidate;
+        if (candidates.length > 0 && candidates[0].rxcui) {
+          const rxcui = String(candidates[0].rxcui);
+          
+          // Cache the result
+          rxcuiCache.set(cacheKey, {
+            data: rxcui,
+            expiresAt: Date.now() + RXCUI_CACHE_TTL_MS,
+          });
+          
+          return rxcui;
+        }
+      }
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error instanceof Error && error.name === 'AbortError') {
+        continue; // Try next variant on timeout
+      }
+      continue; // Try next variant on other errors
+    }
+  }
+  
+  // Cache null result to avoid repeated failed lookups
+  rxcuiCache.set(cacheKey, {
+    data: null,
+    expiresAt: Date.now() + RXCUI_CACHE_TTL_MS,
+  });
+  
+  return null;
+}
+
+function buildFaersUrl(
+  startDate: string,
+  endDate: string,
+  queryType: 'rxcui' | 'generic_exact' | 'brand_exact' | 'medicinalproduct',
+  value: string
+): string {
   const dateConstraint = `receivedate:[${startDate}+TO+${endDate}]`;
   let drugConstraint: string;
   
   switch (queryType) {
+    case 'rxcui':
+      drugConstraint = `patient.drug.openfda.rxcui:"${value}"`;
+      break;
     case 'generic_exact':
-      drugConstraint = `patient.drug.openfda.generic_name.exact:"${drugName}"`;
+      drugConstraint = `patient.drug.openfda.generic_name.exact:"${value}"`;
       break;
     case 'brand_exact':
-      drugConstraint = `patient.drug.openfda.brand_name.exact:"${drugName}"`;
+      drugConstraint = `patient.drug.openfda.brand_name.exact:"${value}"`;
       break;
     case 'medicinalproduct':
-      drugConstraint = `patient.drug.medicinalproduct:"${drugName}"`;
+      drugConstraint = `patient.drug.medicinalproduct:"${value}"`;
       break;
   }
   
@@ -336,11 +460,15 @@ async function fetchCmsMetadata(debug: boolean): Promise<{ columns: string[]; me
   }
 }
 
-async function fetchCmsTopList(debug: boolean = false): Promise<{ topList: TopDrugItem[]; exposureType: 'beneficiaries' | 'claims'; debugInfo?: DebugInfo }> {
+async function fetchCmsTopList(debug: boolean = false, refresh: boolean = false): Promise<{ topList: TopDrugItem[]; exposureType: 'beneficiaries' | 'claims'; debugInfo?: DebugInfo }> {
   const debugInfo: DebugInfo = {};
   
-  // Check cache (skip if debug)
-  if (!debug && cmsTopListCache && Date.now() < cmsTopListCache.expiresAt) {
+  if (debug && refresh) {
+    debugInfo.cacheBypassed = true;
+  }
+  
+  // Check cache (skip if debug or refresh)
+  if (!debug && !refresh && cmsTopListCache && Date.now() < cmsTopListCache.expiresAt) {
     const cached = cmsTopListCache.data as { topList: TopDrugItem[]; exposureType: 'beneficiaries' | 'claims' };
     if (debug) {
       debugInfo.cacheHit = { cms: true };
@@ -375,8 +503,8 @@ async function fetchCmsTopList(debug: boolean = false): Promise<{ topList: TopDr
     // Fetch small sample to get columns
     dataUrl = `${CMS_DATA_URL}?size=1`;
   } else {
-    // Fetch sorted by exposure DESC with size=500
-    dataUrl = `${CMS_DATA_URL}?size=500&sort=-${encodeURIComponent(exposureField)}`;
+    // Fetch sorted by exposure DESC with size=5000 (truly top by exposure)
+    dataUrl = `${CMS_DATA_URL}?size=5000&sort=-${encodeURIComponent(exposureField)}`;
   }
   
   debugInfo.cmsRequestUrl = dataUrl;
@@ -460,7 +588,7 @@ async function fetchCmsTopList(debug: boolean = false): Promise<{ topList: TopDr
     
     // If we only fetched 1 row to get columns, now fetch the full sorted dataset
     if (data.length === 1 && exposureField) {
-      const fullDataUrl = `${CMS_DATA_URL}?size=500&sort=-${encodeURIComponent(exposureField)}`;
+      const fullDataUrl = `${CMS_DATA_URL}?size=5000&sort=-${encodeURIComponent(exposureField)}`;
       debugInfo.cmsRequestUrl = fullDataUrl;
       
       console.error('[data-signals-exposure]', {
@@ -636,12 +764,16 @@ async function fetchCmsTopList(debug: boolean = false): Promise<{ topList: TopDr
     }
     
     debugInfo.topListPreview = topList.slice(0, 10);
+    debugInfo.topListFirst10 = topList.slice(0, 10);
     debugInfo.filteredOutCounts = filteredOutCounts;
+    debugInfo.cmsUsedYear = exposureYear || undefined;
+    debugInfo.cmsExposureField = exposureField || undefined;
+    debugInfo.cmsNameField = nameField || undefined;
     
     const result = { topList, exposureType };
     
-    // Cache the result (only if not debug)
-    if (!debug) {
+    // Cache the result (only if not debug and not refresh)
+    if (!debug && !refresh) {
       cmsTopListCache = {
         data: result,
         expiresAt: Date.now() + CACHE_TTL_MS,
@@ -677,34 +809,152 @@ async function fetchCmsTopList(debug: boolean = false): Promise<{ topList: TopDr
   }
 }
 
-async function fetchFaersCount(drugName: string, days: number = 365, debug: boolean = false): Promise<{ count: number; debugInfo?: DebugInfo }> {
+async function fetchFaersCount(drugName: string, days: number = 365, debug: boolean = false, refresh: boolean = false): Promise<{ count: number; debugInfo?: DebugInfo }> {
   const debugInfo: DebugInfo = {};
   
   // Normalize name for FAERS querying
   const { displayName, queryName } = normalizeCmsNameForFaers(drugName);
-  
-  // Check cache (skip if debug) - cache by queryName, not raw name
-  const cacheKey = `${queryName}:${days}`;
-  const cached = faersCache.get(cacheKey);
-  if (!debug && cached && Date.now() < cached.expiresAt) {
-    const count = cached.data as number;
-    if (debug) {
-      debugInfo.cacheHit = { faers: true };
-    }
-    return { count, debugInfo: debug ? debugInfo : undefined };
-  }
-  
-  const { start, end } = getDateRange(days);
+  const normalizedForRxNorm = normalizeForRxNorm(drugName)[0];
   
   // Store debug info
   if (debug) {
     debugInfo.selectedDrugRaw = drugName;
+    debugInfo.selectedDrugNormalized = normalizedForRxNorm;
     debugInfo.selectedDrugQueryName = queryName;
     debugInfo.faersAttemptedQueries = [];
   }
   
+  const { start, end } = getDateRange(days);
+  
+  // Step 1: Try to resolve RxCUI
+  let rxcui: string | null = null;
+  try {
+    rxcui = await resolveRxcui(drugName, debug);
+    if (debug) {
+      debugInfo.resolvedRxcui = rxcui;
+    }
+  } catch (error) {
+    if (debug) {
+      debugInfo.faersAttemptedQueries!.push({
+        label: 'rxcui_resolution',
+        url: 'RxNorm API',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
+    }
+  }
+  
+  // Step 2: If we have RxCUI, query FAERS with RxCUI first
+  if (rxcui) {
+    const cacheKey = `faers:${CACHE_VERSION}:${rxcui}:${days}`;
+    
+    // Check cache (skip if debug or refresh)
+    if (!debug && !refresh) {
+      const cached = faersCache.get(cacheKey);
+      if (cached && Date.now() < cached.expiresAt) {
+        const count = cached.data as number;
+        if (debug) {
+          debugInfo.cacheHit = { faers: true };
+        }
+        debugInfo.faersStrategyUsed = 'rxcui';
+        debugInfo.faersTotal = count;
+        return { count, debugInfo: debug ? debugInfo : undefined };
+      }
+    }
+    
+    const url = buildFaersUrl(start, end, 'rxcui', rxcui);
+    
+    if (debug) {
+      debugInfo.faersSearchUrlUsed = url;
+    }
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+    
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'MedSafe Project (https://medsafeproject.org)',
+        },
+        signal: controller.signal,
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Parse count from openFDA meta.results.total
+        let count = 0;
+        
+        if (data.meta?.results?.total !== undefined) {
+          count = typeof data.meta.results.total === 'number' 
+            ? data.meta.results.total 
+            : parseInt(String(data.meta.results.total), 10);
+        } else if (data.results && Array.isArray(data.results) && data.results.length > 0) {
+          count = data.results.length;
+        }
+        
+        if (debug) {
+          debugInfo.faersAttemptedQueries!.push({
+            label: 'rxcui',
+            url,
+            total: count,
+          });
+          debugInfo.faersChosen = { label: 'rxcui', total: count };
+        }
+        
+        debugInfo.faersStrategyUsed = 'rxcui';
+        debugInfo.faersTotal = count;
+        
+        // Cache the result (only if not debug and not refresh)
+        if (!debug && !refresh) {
+          faersCache.set(cacheKey, {
+            data: count,
+            expiresAt: Date.now() + CACHE_TTL_MS,
+          });
+        }
+        
+        console.error('[data-signals-exposure]', {
+          step: 'FAERS count fetched (RxCUI)',
+          drugName,
+          rxcui,
+          count,
+          timestamp: new Date().toISOString(),
+        });
+        
+        return { count, debugInfo: debug ? debugInfo : undefined };
+      }
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (debug) {
+        debugInfo.faersAttemptedQueries!.push({
+          label: 'rxcui',
+          url,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
+      }
+      // Fall through to name-based fallback
+    }
+  }
+  
+  // Step 3: Fallback to name-based queries if RxCUI failed or was null
+  debugInfo.faersStrategyUsed = 'name-fallback';
+  
+  // Check cache for name-based query (skip if debug or refresh)
+  const nameCacheKey = `faers:${CACHE_VERSION}:name:${queryName}:${days}`;
+  if (!debug && !refresh) {
+    const cached = faersCache.get(nameCacheKey);
+    if (cached && Date.now() < cached.expiresAt) {
+      const count = cached.data as number;
+      if (debug) {
+        debugInfo.cacheHit = { faers: true };
+      }
+      debugInfo.faersTotal = count;
+      return { count, debugInfo: debug ? debugInfo : undefined };
+    }
+  }
+  
   // Define query attempts in order of preference
-  // Try exact matches first, then fallback to partial matches
   const attempts: Array<{ label: string; type: 'generic_exact' | 'brand_exact' | 'medicinalproduct'; drug: string }> = [
     { label: 'generic_name.exact', type: 'generic_exact', drug: queryName },
     { label: 'brand_name.exact', type: 'brand_exact', drug: queryName },
@@ -715,7 +965,7 @@ async function fetchFaersCount(drugName: string, days: number = 365, debug: bool
   
   // Try each attempt in order
   for (const attempt of attempts) {
-    const url = buildFaersUrl(attempt.drug, start, end, attempt.type);
+    const url = buildFaersUrl(start, end, attempt.type, attempt.drug);
     
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
@@ -791,6 +1041,9 @@ async function fetchFaersCount(drugName: string, days: number = 365, debug: bool
       // If we got a non-zero result, use it and stop
       if (count > 0) {
         chosenAttempt = { label: attempt.label, total: count };
+        if (!debugInfo.faersSearchUrlUsed) {
+          debugInfo.faersSearchUrlUsed = url;
+        }
         break; // Found a match, stop trying
       }
       
@@ -832,10 +1085,11 @@ async function fetchFaersCount(drugName: string, days: number = 365, debug: bool
   }
   
   debugInfo.faersRawCount = count;
+  debugInfo.faersTotal = count;
   
-  // Cache the result (only if not debug) - cache by queryName
-  if (!debug) {
-    faersCache.set(cacheKey, {
+  // Cache the result (only if not debug and not refresh) - cache by queryName
+  if (!debug && !refresh) {
+    faersCache.set(nameCacheKey, {
       data: count,
       expiresAt: Date.now() + CACHE_TTL_MS,
     });
@@ -845,7 +1099,9 @@ async function fetchFaersCount(drugName: string, days: number = 365, debug: bool
     step: 'FAERS count fetched',
     drugName,
     queryName,
+    rxcui: rxcui || 'none',
     count,
+    strategy: debugInfo.faersStrategyUsed,
     chosenAttempt: chosenAttempt?.label || 'none',
     timestamp: new Date().toISOString(),
   });
@@ -871,11 +1127,12 @@ export const handler: Handler = async (
 
   const requestedDrug = event.queryStringParameters?.drug;
   const debug = event.queryStringParameters?.debug === '1';
+  const refresh = event.queryStringParameters?.refresh === '1';
   const timeWindowDays = 365;
 
   try {
     // Fetch CMS top list
-    const cmsResult = await fetchCmsTopList(debug);
+    const cmsResult = await fetchCmsTopList(debug, refresh);
     const { topList, exposureType, debugInfo: cmsDebugInfo } = cmsResult;
     
     // Create base response object to prevent "forgot to include exposureType" bugs
@@ -960,7 +1217,7 @@ export const handler: Handler = async (
     }
     
     // Fetch FAERS count (normalization happens inside fetchFaersCount)
-    const faersResult = await fetchFaersCount(selectedDrugName, timeWindowDays, debug);
+    const faersResult = await fetchFaersCount(selectedDrugName, timeWindowDays, debug, refresh);
     const { count: faersReports, debugInfo: faersDebugInfo } = faersResult;
     
     // Calculate rate per 100k
@@ -990,6 +1247,7 @@ export const handler: Handler = async (
         ...faersDebugInfo,
         selectedDrug: selectedDrugName,
         itemPreview: item,
+        cacheBypassed: refresh || cmsDebugInfo?.cacheBypassed || false,
       };
     }
     
