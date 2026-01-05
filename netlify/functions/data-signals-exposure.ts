@@ -47,6 +47,11 @@ interface DebugInfo {
   };
   selectedDrug?: string;
   itemPreview?: SignalExposureItem;
+  selectedDrugRaw?: string;
+  selectedDrugCleaned?: string;
+  faersQueryName?: string;
+  faersAttemptedQueries?: Array<{ label: string; url: string; total?: number; error?: string }>;
+  faersChosen?: { label: string; total: number };
 }
 
 interface CacheEntry {
@@ -173,12 +178,36 @@ function cleanDrugNameForFaers(drugName: string): string {
   return drugName.replace(/\*+$/, '').trim();
 }
 
-function buildFaersUrl(drugName: string, startDate: string, endDate: string, useExact: boolean = true): string {
-  // Clean drug name for FAERS query
-  const cleanName = cleanDrugNameForFaers(drugName);
-  const searchQuery = useExact
-    ? `receivedate:[${startDate}+TO+${endDate}]+AND+patient.drug.medicinalproduct.exact:"${cleanName}"`
-    : `receivedate:[${startDate}+TO+${endDate}]+AND+patient.drug.medicinalproduct:"${cleanName}"`;
+function createFaersQueryName(drugName: string): string {
+  // Start with cleaned name (trim, uppercase, remove trailing *)
+  let queryName = cleanDrugNameForFaers(drugName).toUpperCase();
+  
+  // Replace commas with spaces
+  queryName = queryName.replace(/,/g, ' ');
+  
+  // Collapse whitespace
+  queryName = queryName.replace(/\s+/g, ' ').trim();
+  
+  return queryName;
+}
+
+function buildFaersUrl(drugName: string, startDate: string, endDate: string, queryType: 'generic_exact' | 'brand_exact' | 'medicinalproduct'): string {
+  const dateConstraint = `receivedate:[${startDate}+TO+${endDate}]`;
+  let drugConstraint: string;
+  
+  switch (queryType) {
+    case 'generic_exact':
+      drugConstraint = `patient.drug.openfda.generic_name.exact:"${drugName}"`;
+      break;
+    case 'brand_exact':
+      drugConstraint = `patient.drug.openfda.brand_name.exact:"${drugName}"`;
+      break;
+    case 'medicinalproduct':
+      drugConstraint = `patient.drug.medicinalproduct:"${drugName}"`;
+      break;
+  }
+  
+  const searchQuery = `${dateConstraint}+AND+${drugConstraint}`;
   const params = new URLSearchParams({
     search: searchQuery,
     limit: '1',
@@ -496,109 +525,176 @@ async function fetchFaersCount(drugName: string, days: number = 365, debug: bool
   
   const { start, end } = getDateRange(days);
   const cleanName = cleanDrugNameForFaers(drugName);
+  const faersQueryName = createFaersQueryName(drugName);
   
-  // Use exact match by default
-  let url = buildFaersUrl(drugName, start, end, true);
-  debugInfo.faersRequestUrl = url;
+  // Store debug info
+  if (debug) {
+    debugInfo.selectedDrugRaw = drugName;
+    debugInfo.selectedDrugCleaned = cleanName;
+    debugInfo.faersQueryName = faersQueryName;
+    debugInfo.faersAttemptedQueries = [];
+  }
+  
+  // Define query attempts in order of preference
+  const attempts: Array<{ label: string; type: 'generic_exact' | 'brand_exact' | 'medicinalproduct'; drug: string }> = [
+    { label: 'generic_name.exact', type: 'generic_exact', drug: faersQueryName },
+    { label: 'brand_name.exact', type: 'brand_exact', drug: faersQueryName },
+    { label: 'medicinalproduct', type: 'medicinalproduct', drug: faersQueryName },
+  ];
+  
+  // If query name contains " WITH ", also try without the "WITH" part
+  if (faersQueryName.includes(' WITH ')) {
+    const withoutWith = faersQueryName.split(' WITH ')[0].trim();
+    if (withoutWith) {
+      attempts.push(
+        { label: 'generic_name.exact (without WITH)', type: 'generic_exact', drug: withoutWith },
+        { label: 'brand_name.exact (without WITH)', type: 'brand_exact', drug: withoutWith },
+        { label: 'medicinalproduct (without WITH)', type: 'medicinalproduct', drug: withoutWith }
+      );
+    }
+  }
+  
+  let chosenAttempt: { label: string; total: number } | null = null;
+  
+  // Try each attempt in order
+  for (const attempt of attempts) {
+    const url = buildFaersUrl(attempt.drug, start, end, attempt.type);
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+    
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'MedSafe Project (https://medsafeproject.org)',
+        },
+        signal: controller.signal,
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        // 404 means no results, treat as 0 and continue to next attempt
+        if (response.status === 404) {
+          if (debug) {
+            debugInfo.faersAttemptedQueries!.push({
+              label: attempt.label,
+              url,
+              total: 0,
+            });
+          }
+          continue; // Try next attempt
+        }
+        
+        // Other errors: record and continue
+        const responseText = await response.text();
+        const snippet = responseText.substring(0, 400);
+        
+        if (debug) {
+          debugInfo.faersAttemptedQueries!.push({
+            label: attempt.label,
+            url,
+            error: `${response.status} ${response.statusText}: ${snippet.substring(0, 100)}`,
+          });
+        }
+        
+        console.error('[data-signals-exposure]', {
+          step: 'FAERS API error (continuing)',
+          attempt: attempt.label,
+          drugName,
+          status: response.status,
+          timestamp: new Date().toISOString(),
+        });
+        
+        continue; // Try next attempt
+      }
+      
+      const data = await response.json();
+      
+      // Parse count from openFDA meta.results.total
+      let count = 0;
+      
+      if (data.meta?.results?.total !== undefined) {
+        count = typeof data.meta.results.total === 'number' 
+          ? data.meta.results.total 
+          : parseInt(String(data.meta.results.total), 10);
+      } else if (data.results && Array.isArray(data.results) && data.results.length > 0) {
+        // Fallback to counting results array length if meta.total not available
+        count = data.results.length;
+      }
+      
+      if (debug) {
+        debugInfo.faersAttemptedQueries!.push({
+          label: attempt.label,
+          url,
+          total: count,
+        });
+      }
+      
+      // If we got a non-zero result, use it
+      if (count > 0) {
+        chosenAttempt = { label: attempt.label, total: count };
+        break; // Found a match, stop trying
+      }
+      
+      // If count is 0, continue to next attempt
+    } catch (error) {
+      clearTimeout(timeoutId);
+      
+      if (error instanceof Error && error.name === 'AbortError') {
+        if (debug) {
+          debugInfo.faersAttemptedQueries!.push({
+            label: attempt.label,
+            url,
+            error: `Timeout after ${FETCH_TIMEOUT_MS}ms`,
+          });
+        }
+        // Continue to next attempt on timeout
+        continue;
+      }
+      
+      // Other errors: record and continue
+      if (debug) {
+        debugInfo.faersAttemptedQueries!.push({
+          label: attempt.label,
+          url,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
+      }
+      
+      // Continue to next attempt
+      continue;
+    }
+  }
+  
+  // Use the chosen attempt's count, or 0 if all attempts failed
+  const count = chosenAttempt?.total || 0;
+  
+  if (debug && chosenAttempt) {
+    debugInfo.faersChosen = chosenAttempt;
+  }
+  
+  debugInfo.faersRawCount = count;
+  
+  // Cache the result (only if not debug)
+  if (!debug) {
+    faersCache.set(cacheKey, {
+      data: count,
+      expiresAt: Date.now() + CACHE_TTL_MS,
+    });
+  }
   
   console.error('[data-signals-exposure]', {
-    step: 'fetching FAERS count',
+    step: 'FAERS count fetched',
     drugName,
     cleanName,
-    url,
+    faersQueryName,
+    count,
+    chosenAttempt: chosenAttempt?.label || 'none',
     timestamp: new Date().toISOString(),
   });
   
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-  
-  try {
-    let response = await fetch(url, {
-      headers: {
-        'User-Agent': 'MedSafe Project (https://medsafeproject.org)',
-      },
-      signal: controller.signal,
-    });
-    
-    clearTimeout(timeoutId);
-    
-    debugInfo.faersStatus = response.status;
-    
-    if (!response.ok) {
-      // 404 means no results, treat as 0
-      if (response.status === 404) {
-        console.error('[data-signals-exposure]', {
-          step: 'FAERS no results (404)',
-          drugName,
-          cleanName,
-          timestamp: new Date().toISOString(),
-        });
-        return { count: 0, debugInfo: debug ? debugInfo : undefined };
-      }
-      
-      const responseText = await response.text();
-      const snippet = responseText.substring(0, 400);
-      debugInfo.responseSnippet = snippet;
-      debugInfo.fetchErrorStage = 'faers';
-      
-      console.error('[data-signals-exposure]', {
-        step: 'FAERS API error',
-        drugName,
-        cleanName,
-        status: response.status,
-        statusText: response.statusText,
-        snippet,
-        timestamp: new Date().toISOString(),
-      });
-      
-      // Return 0 instead of throwing on API errors
-      return { count: 0, debugInfo: debug ? debugInfo : undefined };
-    }
-    
-    const data = await response.json();
-    
-    // Parse count from openFDA meta.results.total
-    let count = 0;
-    
-    if (data.meta?.results?.total !== undefined) {
-      count = typeof data.meta.results.total === 'number' 
-        ? data.meta.results.total 
-        : parseInt(String(data.meta.results.total), 10);
-    } else if (data.results && Array.isArray(data.results) && data.results.length > 0) {
-      // Fallback to counting results array length if meta.total not available
-      count = data.results.length;
-    }
-    
-    debugInfo.faersRawCount = count;
-    
-    // Cache the result (only if not debug)
-    if (!debug) {
-      faersCache.set(cacheKey, {
-        data: count,
-        expiresAt: Date.now() + CACHE_TTL_MS,
-      });
-    }
-    
-    console.error('[data-signals-exposure]', {
-      step: 'FAERS count fetched',
-      drugName,
-      count,
-      timestamp: new Date().toISOString(),
-    });
-    
-    return { count, debugInfo: debug ? debugInfo : undefined };
-  } catch (error) {
-    clearTimeout(timeoutId);
-    
-    if (error instanceof Error && error.name === 'AbortError') {
-      debugInfo.fetchErrorStage = 'faers';
-      // Return 0 instead of throwing on timeout
-      return { count: 0, debugInfo: debug ? debugInfo : undefined };
-    }
-    
-    // Return 0 instead of throwing
-    return { count: 0, debugInfo: debug ? debugInfo : undefined };
-  }
+  return { count, debugInfo: debug ? debugInfo : undefined };
 }
 
 export const handler: Handler = async (
