@@ -1,11 +1,10 @@
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { SEO } from "@/components/SEO";
-import { DataSectionCard } from "@/components/DataSectionCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { WordCloudChart } from "@/components/charts/WordCloudChart";
 import { SignalsVsExposureChart } from "@/components/charts/SignalsVsExposureChart";
+import { CommonInteractionClustersChart } from "@/components/charts/CommonInteractionClustersChart";
 
 export default function Data() {
   return (
@@ -53,18 +52,13 @@ export default function Data() {
             <div className="max-w-5xl mx-auto mb-12">
               <div className="space-y-6">
                 <div>
-                  <div className="flex items-start justify-between gap-4 mb-2">
-                    <div className="flex-1">
-                      <h2 className="text-xl md:text-2xl font-serif mb-2 text-charcoal dark:text-white">
-                        Signals vs exposure
-                      </h2>
-                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
-                        Compare reported adverse events against medication exposure rates to identify potential safety signals that may warrant further investigation.
-                      </p>
-                    </div>
-                    <Badge variant="outline" className="shrink-0 text-xs border-accent/30 text-accent dark:text-accent">
-                      Coming soon
-                    </Badge>
+                  <div className="mb-2">
+                    <h2 className="text-xl md:text-2xl font-serif mb-2 text-charcoal dark:text-white">
+                      Signals vs exposure
+                    </h2>
+                    <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+                      Compare reported adverse events against medication exposure rates to identify potential safety signals that may warrant further investigation.
+                    </p>
                   </div>
                 </div>
                 <SignalsVsExposureChart />
@@ -92,32 +86,17 @@ export default function Data() {
           {/* Section 3: Common interaction clusters */}
           <ScrollReveal delay={300}>
             <div className="max-w-5xl mx-auto mb-12">
-              <DataSectionCard
-                title="Common interaction clusters"
-                description="Explore groups of medications that frequently interact together, revealing patterns in polypharmacy risks and common co-prescription scenarios."
-                comingSoon={true}
-              >
-                <div className="h-64 md:h-80 w-full rounded-lg overflow-hidden 
-                  bg-gradient-to-br from-gray-100 to-gray-200 dark:from-charcoal/50 dark:to-charcoal/70
-                  border border-white/20 dark:border-white/10
-                  p-4">
-                  {/* Heatmap-like grid placeholder */}
-                  <div className="grid grid-cols-8 md:grid-cols-12 gap-1 h-full">
-                    {Array.from({ length: 96 }).map((_, i) => (
-                      <Skeleton 
-                        key={i} 
-                        className={`h-full w-full ${
-                          i % 12 === 0 || i % 12 === 5 || i % 12 === 8 
-                            ? 'opacity-60' 
-                            : i % 12 === 2 || i % 12 === 7 || i % 12 === 11
-                            ? 'opacity-40'
-                            : 'opacity-20'
-                        }`}
-                      />
-                    ))}
-                  </div>
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-xl md:text-2xl font-serif mb-2 text-charcoal dark:text-white">
+                    Common interaction clusters
+                  </h2>
+                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+                    Explore groups of medications that frequently interact together, revealing patterns in polypharmacy risks and common co-prescription scenarios.
+                  </p>
                 </div>
-              </DataSectionCard>
+                <CommonInteractionClustersChart />
+              </div>
             </div>
           </ScrollReveal>
 

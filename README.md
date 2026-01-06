@@ -60,6 +60,27 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Local Development with Netlify Dev
+
+To run the app locally with Netlify functions support:
+
+```sh
+# Install dependencies
+npm i
+
+# Start Netlify Dev (this will automatically start Vite and proxy requests)
+netlify dev
+```
+
+**Expected URLs:**
+- App: http://localhost:8888
+- Function endpoint: http://localhost:8888/.netlify/functions/data-interaction-clusters
+
+Netlify Dev will automatically:
+- Start the Vite dev server on port 8080 (internal)
+- Proxy all requests from port 8888 to the Vite server
+- Handle Netlify functions routing
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/6f6b35fd-117f-446c-b79a-3c04ddb28f08) and click on Share -> Publish.
