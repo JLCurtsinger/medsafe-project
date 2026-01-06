@@ -20,7 +20,7 @@ export function ArticleCard({ id, title, excerpt, date, readingTime, image, cate
         <img
           src={image}
           alt={title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute top-4 left-4">
           <span className="tag">{category}</span>

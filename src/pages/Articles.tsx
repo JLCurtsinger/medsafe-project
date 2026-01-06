@@ -7,11 +7,18 @@ import { SEO } from "@/components/SEO";
 
 const categories = ["All", "Research", "Patient Stories", "Prevention", "News"];
 
+// Sort articles by date (newest first)
+const sortedArticles = [...articles].sort((a, b) => {
+  const dateA = new Date(a.date).getTime();
+  const dateB = new Date(b.date).getTime();
+  return dateB - dateA; // Descending order (newest first)
+});
+
 export default function Articles() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredArticles = articles.filter(
+  const filteredArticles = sortedArticles.filter(
     (article) =>
       (activeCategory === "All" || article.category === activeCategory) &&
       (article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -23,7 +30,7 @@ export default function Articles() {
     "@type": "CollectionPage",
     "mainEntity": {
       "@type": "ItemList",
-      "itemListElement": articles.slice(0, 10).map((article, index) => ({
+      "itemListElement": sortedArticles.slice(0, 10).map((article, index) => ({
         "@type": "ListItem",
         "position": index + 1,
         "url": `${window.location.origin}/article/${article.slug}`,

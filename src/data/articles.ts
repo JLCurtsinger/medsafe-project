@@ -6,6 +6,7 @@ import technologyPrevention from './articles/technology-preventing-medication-er
 import olderAdultsConcerns from './articles/medication-concerns-older-adults';
 import personalMedicationRecord from './articles/create-personal-medication-record';
 import mindTheGap from './articles/mind-the-gap';
+import top10DangerousDrugCombos from './articles/top-10-dangerous-drug-combos';
 
 export const articles = [
   understandingDrugInteractions,
@@ -14,5 +15,6 @@ export const articles = [
   technologyPrevention,
   olderAdultsConcerns,
   personalMedicationRecord,
-  mindTheGap
+  mindTheGap,
+  top10DangerousDrugCombos
 ];

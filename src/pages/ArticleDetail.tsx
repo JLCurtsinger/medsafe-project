@@ -30,6 +30,11 @@ export default function ArticleDetail() {
   // Current article URL for sharing
   const articleUrl = `${window.location.origin}/article/${article.slug}`;
   
+  // Convert relative image URL to absolute for Open Graph
+  const imageUrl = article.image.startsWith('http') 
+    ? article.image 
+    : `${window.location.origin}${article.image}`;
+  
   // Extract first 160 characters of article for meta description
   const metaDescription = article.fullText.substring(0, 157) + "...";
   
@@ -38,7 +43,7 @@ export default function ArticleDetail() {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "headline": article.title,
-    "image": article.image,
+    "image": imageUrl,
     "datePublished": article.date,
     "dateModified": article.date,
     "author": {
@@ -67,7 +72,7 @@ export default function ArticleDetail() {
         title={article.title}
         description={metaDescription}
         articleUrl={articleUrl}
-        image={article.image}
+        image={imageUrl}
         date={article.date}
         category={article.category}
         schema={articleSchema}
@@ -83,7 +88,7 @@ export default function ArticleDetail() {
               category={article.category}
             />
             
-            <ArticleImage src={article.image} alt={article.title} />
+            <ArticleImage src={article.image} alt={(article as any).imageAlt || article.title} />
             
             <ArticleContent 
               fullText={article.fullText}

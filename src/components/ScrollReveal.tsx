@@ -11,6 +11,33 @@ export function ScrollReveal({ children, className = "", delay = 0 }: ScrollReve
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    // Check if element is already in viewport on mount
+    const checkInitialVisibility = () => {
+      const rect = element.getBoundingClientRect();
+      const isInViewport = 
+        rect.top < window.innerHeight &&
+        rect.bottom > 0 &&
+        rect.left < window.innerWidth &&
+        rect.right > 0;
+      
+      if (isInViewport) {
+        setTimeout(() => {
+          element.classList.add("active");
+        }, delay);
+        return true;
+      }
+      return false;
+    };
+
+    // If already visible, activate immediately
+    if (checkInitialVisibility()) {
+      return;
+    }
+
+    // Otherwise, set up IntersectionObserver
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -28,14 +55,10 @@ export function ScrollReveal({ children, className = "", delay = 0 }: ScrollReve
       }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+    observer.observe(element);
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
+      observer.unobserve(element);
     };
   }, [delay]);
 
